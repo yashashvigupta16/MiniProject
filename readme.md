@@ -17,8 +17,6 @@ This project is an **AI-assisted career helper** that processes a student's resu
 
 ## ⚙️ Tech Stack
 
-All tools selected for this project are 100% free, open-source, and beginner-friendly.
-
 ### 🌐 Frontend (User Interface)
 * **HTML5 & CSS3:** Page structure, custom layout, and responsive design.
 * **JavaScript (ES6):** Dynamic UI operations, file handling, and API integration (`fetch` / `axios`).
