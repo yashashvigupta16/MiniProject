@@ -7,45 +7,54 @@ const goTo = id => { const el = document.getElementById(id); if (el) el.scrollIn
 const COLS = ["#6C4BFF", "#2F7BFF", "#A99BFF", "#1A2260"];
 
 /* ============ ICONS & ATOMS ============ */
-const P = { upload: "M12 15V3m0 0L7 8m5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4", file: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6", check: "M20 6 9 17l-5-5", x: "M18 6 6 18M6 6l12 12",
- alert: "m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4M12 17h.01", back: "m12 19-7-7 7-7M19 12H5", zap: "M13 2 3 14h9l-1 8 10-12h-9z", download: "M12 3v12m0 0 5-5m-5 5-5-5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4",
- route: "M6 19h8.5a3.5 3.5 0 0 0 0-7h-5a3.5 3.5 0 0 1 0-7H18", bars: "M3 3v18h18M8 17v-5M13 17V8M18 17v-9", cols: "M12 3v18M4 6h5v12H4zM15 9h5v9h-5z", plus: "M5 12h14M12 5v14", out: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9",
- arrow: "M5 12h14m-6-6 6 6-6 6", eye: "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z", eyeoff: "M9.9 4.2A10 10 0 0 1 12 4c6.5 0 10 8 10 8a17 17 0 0 1-2.2 3.2M6.6 6.6A16 16 0 0 0 2 12s3.5 8 10 8a9.7 9.7 0 0 0 5.4-1.6M2 2l20 20M9.9 9.9a3 3 0 0 0 4.2 4.2",
- clock: "M12 6v6l4 2M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0z", trash: "M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6", refresh: "M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5",
- target: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z", layers: "m12 2 10 5-10 5L2 7zM2 17l10 5 10-5M2 12l10 5 10-5",
- spark: "M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 16l.7 1.8 1.8.7-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z", menu: "M4 7h16M4 12h16M4 17h16", trend: "m22 7-8.5 8.5-5-5L2 17M16 7h6v6",
- user: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z", lock: "M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4", mail: "M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM22 6l-10 7L2 6",
- info: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01", okc: "M22 11.1V12a10 10 0 1 1-5.9-9.1M22 4 12 14l-3-3", grid: "M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z", list: "M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01", loader: "M21 12a9 9 0 1 1-6.2-8.55" };
+const P = {
+  upload: "M12 15V3m0 0L7 8m5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4", file: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6", check: "M20 6 9 17l-5-5", x: "M18 6 6 18M6 6l12 12",
+  alert: "m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4M12 17h.01", back: "m12 19-7-7 7-7M19 12H5", zap: "M13 2 3 14h9l-1 8 10-12h-9z", download: "M12 3v12m0 0 5-5m-5 5-5-5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4",
+  route: "M6 19h8.5a3.5 3.5 0 0 0 0-7h-5a3.5 3.5 0 0 1 0-7H18", bars: "M3 3v18h18M8 17v-5M13 17V8M18 17v-9", cols: "M12 3v18M4 6h5v12H4zM15 9h5v9h-5z", plus: "M5 12h14M12 5v14", out: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9",
+  arrow: "M5 12h14m-6-6 6 6-6 6", eye: "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z", eyeoff: "M9.9 4.2A10 10 0 0 1 12 4c6.5 0 10 8 10 8a17 17 0 0 1-2.2 3.2M6.6 6.6A16 16 0 0 0 2 12s3.5 8 10 8a9.7 9.7 0 0 0 5.4-1.6M2 2l20 20M9.9 9.9a3 3 0 0 0 4.2 4.2",
+  clock: "M12 6v6l4 2M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0z", trash: "M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6", refresh: "M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5",
+  target: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z", layers: "m12 2 10 5-10 5L2 7zM2 17l10 5 10-5M2 12l10 5 10-5",
+  spark: "M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 16l.7 1.8 1.8.7-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z", menu: "M4 7h16M4 12h16M4 17h16", trend: "m22 7-8.5 8.5-5-5L2 17M16 7h6v6",
+  user: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z", lock: "M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4", mail: "M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM22 6l-10 7L2 6",
+  info: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01", okc: "M22 11.1V12a10 10 0 1 1-5.9-9.1M22 4 12 14l-3-3", grid: "M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z", list: "M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01", loader: "M21 12a9 9 0 1 1-6.2-8.55"
+};
 const Ic = ({ n, s = 16, c = "", w = 1.8 }) => html`<svg width=${s} height=${s} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=${w} stroke-linecap="round" stroke-linejoin="round" class=${cx("shrink-0", c)} aria-hidden="true"><path d=${P[n]}/></svg>`;
 const Card = ({ c = "", children }) => html`<div class=${cx("surface", c)}>${children}</div>`;
 const Btn = ({ v, c = "", ...p }) => html`<button ...${p} class=${cx("btn", v === "p" ? "btn-p" : v === "w" ? "btn-w" : "btn-g", c)}/>`;
 const TK = { n: "", ok: "tag-ok", am: "tag-am" };
 const Tag = ({ t, k = "n", x }) => html`<span class=${cx("tag", TK[k])}>${k === "ok" && html`<${Ic} n="check" s=${12} w=${2.4}/>`}${t}${x && html`<button type="button" onClick=${x} aria-label=${"Remove " + t}><${Ic} n="x" s=${12}/></button>`}</span>`;
-const Bar = ({ v, c = "fill-brand", h = "h-2", col }) => { const [w, setW] = useState(0); useEffect(() => { const t = setTimeout(() => setW(v), 40); return () => clearTimeout(t); }, [v]);
-  return html`<div class=${cx("track", h)}><i class=${col ? "" : c} style=${{ width: w + "%", background: col || undefined }}/></div>`; };
+const Bar = ({ v, c = "fill-brand", h = "h-2", col }) => {
+  const [w, setW] = useState(0); useEffect(() => { const t = setTimeout(() => setW(v), 40); return () => clearTimeout(t); }, [v]);
+  return html`<div class=${cx("track", h)}><i class=${col ? "" : c} style=${{ width: w + "%", background: col || undefined }}/></div>`;
+};
 const Mark = ({ s = 32 }) => html`<span class="grid place-items-center rounded-[10px] fill-brand shadow-glow" style=${{ width: s, height: s }}><svg width=${s * .6} height=${s * .6} viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 12 5l7 14M8.5 14h7"/><circle cx="12" cy="5" r="1.6" fill="#fff"/></svg></span>`;
 const Brand = ({ dark }) => html`<div class=${cx("flex items-center gap-2.5 font-extrabold text-[19px] tracking-tight", dark ? "text-white" : "text-ink")}><${Mark}/>AlgoMind</div>`;
 const Defs = () => html`<svg width="0" height="0" style=${{ position: "absolute" }} aria-hidden="true"><defs><linearGradient id="gv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6C4BFF"/><stop offset="1" stop-color="#2F7BFF"/></linearGradient><linearGradient id="gw" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C9BEFF"/><stop offset="1" stop-color="#7FB0FF"/></linearGradient></defs></svg>`;
-const Ring = ({ v, s = 64, w = 7, dark, txt = true }) => { const [o, setO] = useState(0); useEffect(() => { const t = setTimeout(() => setO(v), 60); return () => clearTimeout(t); }, [v]);
+const Ring = ({ v, s = 64, w = 7, dark, txt = true }) => {
+  const [o, setO] = useState(0); useEffect(() => { const t = setTimeout(() => setO(v), 60); return () => clearTimeout(t); }, [v]);
   const r = (s - w) / 2, C = 2 * Math.PI * r;
   return html`<div class="relative shrink-0" style=${{ width: s, height: s }} role="img" aria-label=${"Score " + Math.round(v) + " percent"}><svg width=${s} height=${s} viewBox=${"0 0 " + s + " " + s} style=${{ transform: "rotate(-90deg)" }}>
     <circle cx=${s / 2} cy=${s / 2} r=${r} fill="none" stroke=${dark ? "rgba(255,255,255,.14)" : "#EAE7FB"} stroke-width=${w}/>
     <circle class="ring-arc" cx=${s / 2} cy=${s / 2} r=${r} fill="none" stroke=${dark ? "url(#gw)" : "url(#gv)"} stroke-width=${w} stroke-linecap="round" stroke-dasharray=${C} stroke-dashoffset=${C * (1 - o / 100)}/></svg>
-    ${txt && html`<div class=${cx("absolute inset-0 grid place-items-center font-bold tnum", dark ? "text-white" : "text-ink")} style=${{ fontSize: s * .27 }}><span>${Math.round(v)}<span style=${{ fontSize: s * .15, marginLeft: 1, opacity: .6 }}>%</span></span></div>`}</div>`; };
-const Radar = ({ d, dark }) => { const k = Object.keys(d), cxn = 130, cy = 118, R = 78, p = (v, i, m = 1) => { const a = (i * 90 - 90) * Math.PI / 180, r = v / 100 * R * m; return [cxn + r * Math.cos(a), cy + r * Math.sin(a)]; };
+    ${txt && html`<div class=${cx("absolute inset-0 grid place-items-center font-bold tnum", dark ? "text-white" : "text-ink")} style=${{ fontSize: s * .27 }}><span>${Math.round(v)}<span style=${{ fontSize: s * .15, marginLeft: 1, opacity: .6 }}>%</span></span></div>`}</div>`;
+};
+const Radar = ({ d, dark }) => {
+  const k = Object.keys(d), cxn = 130, cy = 118, R = 78, p = (v, i, m = 1) => { const a = (i * 90 - 90) * Math.PI / 180, r = v / 100 * R * m; return [cxn + r * Math.cos(a), cy + r * Math.sin(a)]; };
   const pts = k.map((x, i) => p(d[x], i).join(",")).join(" ");
   return html`<svg viewBox="0 0 260 236" class="w-full max-w-[280px] mx-auto" role="img" aria-label=${"Score breakdown radar: " + k.map(x => x + " " + d[x] + "%").join(", ")}>
   ${[25, 50, 75, 100].map(r => html`<polygon key=${r} points=${k.map((_, i) => p(r, i).join(",")).join(" ")} fill=${r === 100 ? "rgba(108,75,255,.04)" : "none"} stroke="#DAD5F5" stroke-dasharray=${r === 100 ? "" : "2 3"}/>`)}
   ${k.map((_, i) => html`<line key=${i} x1=${cxn} y1=${cy} x2=${p(100, i)[0]} y2=${p(100, i)[1]} stroke="#E3E0F6"/>`)}
   <polygon points=${pts} fill="rgba(108,75,255,.2)" stroke="url(#gv)" stroke-width="2.2" stroke-linejoin="round"/>
   ${k.map((x, i) => { const [a, b] = p(d[x], i); return html`<circle key=${x} cx=${a} cy=${b} r="4" fill="#fff" stroke="#6C4BFF" stroke-width="2"/>`; })}
-  ${k.map((x, i) => { const [a, b] = p(100, i, 1.3); return html`<text key=${x} x=${a} y=${b} font-size="10.5" font-weight="600" text-anchor="middle" dominant-baseline="middle" fill="#5B6288">${x.split(" ")[0]}</text>`; })}</svg>`; };
+  ${k.map((x, i) => { const [a, b] = p(100, i, 1.3); return html`<text key=${x} x=${a} y=${b} font-size="10.5" font-weight="600" text-anchor="middle" dominant-baseline="middle" fill="#5B6288">${x.split(" ")[0]}</text>`; })}</svg>`;
+};
 const pri = d => d >= 50 ? "High" : d >= 30 ? "Medium" : "Low";
 const PRI = { High: "bg-rose-50 text-rose-700 border-rose-200", Medium: "bg-am-l text-am border-amber-200", Low: "bg-blu-l text-blu-d border-blue-200" };
 const Spinner = ({ s = 16 }) => html`<${Ic} n="loader" s=${s} c="spin"/>`;
 
 /* ============ LANDING ============ */
-const HeroScene = () => { const ref = useRef(); const R0 = ROLES[0];
+const HeroScene = () => {
+  const ref = useRef(); const R0 = ROLES[0];
   const move = e => { const el = ref.current; if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches) return; const b = el.getBoundingClientRect(); const x = (e.clientX - b.left) / b.width - .5, y = (e.clientY - b.top) / b.height - .5; el.style.setProperty("--ry", (x * 10).toFixed(2) + "deg"); el.style.setProperty("--rx", (-y * 8).toFixed(2) + "deg"); };
   const leave = () => { const el = ref.current; if (el) { el.style.setProperty("--ry", "0deg"); el.style.setProperty("--rx", "0deg"); } };
   const lines = [[92, 0], [78, 1], [86, 0], [64, 0]];
@@ -63,7 +72,8 @@ const HeroScene = () => { const ref = useRef(); const R0 = ROLES[0];
       <div class="float f1 glass-dark p-3.5 flex items-center gap-3" style=${{ top: "-1%", right: "-6%", width: "62%" }}><${Ring} v=${R0.score} s=${58} w=${6} dark/><div class="min-w-0"><div class="text-[10.5px] text-white/60">Top match</div><div class="text-[13px] font-bold leading-tight">${R0.title}</div></div></div>
       <div class="float f2 glass p-3.5" style=${{ left: "-9%", bottom: "9%", width: "58%" }}><div class="text-[10.5px] font-semibold text-mu mb-2">Matched skills</div><div class="flex flex-wrap gap-1.5">${R0.matched.slice(0, 4).map(s => html`<span key=${s} class="chip-s on">${s}</span>`)}</div></div>
       <div class="float f3 glass p-3.5" style=${{ right: "-7%", bottom: "26%", width: "50%" }}><div class="flex justify-between text-[11px] font-semibold"><span>${R0.gaps[0][0]}</span><span class="text-mu tnum">${R0.gaps[0][1]} / ${R0.gaps[0][2]}</span></div><div class="relative mt-2"><div class="track h-2"><i class="fill-brand" style=${{ width: R0.gaps[0][1] + "%" }}/></div><span class="absolute -top-1 w-0.5 h-4 bg-am rounded" style=${{ left: R0.gaps[0][2] + "%" }}/></div></div>
-    </div></div></div>`; };
+    </div></div></div>`;
+};
 
 const FEATURES = [
   ["Rank several roles at once", "Select the roles you care about, or paste a job description. Every role gets its own alignment score, ordered highest first.", "layers"],
@@ -71,15 +81,18 @@ const FEATURES = [
   ["Skill-gap analysis", "See your current level against what the role expects, ranked by how much work each gap needs.", "bars"],
   ["Learning roadmap", "A phased plan built from your gaps, with tasks you can tick off as you go.", "route"],
   ["Side-by-side comparison", "Put any roles next to each other and see which missing skills show up again and again.", "cols"]];
-const FeatVisual = ({ i }) => { const R0 = ROLES[0];
+const FeatVisual = ({ i }) => {
+  const R0 = ROLES[0];
   if (i === 0) return html`<div class="grid gap-2.5 mt-5">${ROLES.map((r, j) => html`<div key=${r.id} class="grid grid-cols-[1fr_44px] items-center gap-3 text-[13px]"><div><div class="flex justify-between mb-1.5 font-semibold"><span>${r.title}</span></div><${Bar} v=${r.score} col=${COLS[j]}/></div><span class="font-bold tnum text-right">${r.score}%</span></div>`)}</div>`;
   if (i === 1) return html`<div class="mt-2"><${Radar} d=${R0.b}/></div>`;
   if (i === 2) return html`<div class="grid gap-3 mt-5">${R0.gaps.slice(0, 3).map(([s, c, q]) => html`<div key=${s}><div class="flex justify-between text-xs font-semibold mb-1.5"><span>${s}</span><span class="text-mu tnum">${c}% of ${q}%</span></div><div class="relative"><div class="track h-2"><i class="fill-brand" style=${{ width: c + "%" }}/></div><span class="absolute -top-1 w-0.5 h-4 bg-am rounded" style=${{ left: q + "%" }}/></div></div>`)}</div>`;
   if (i === 3) return html`<ul class="mt-5 grid gap-3">${R0.road.map(([w, t], j) => html`<li key=${t} class="flex items-center gap-3 text-[13px]"><span class="w-6 h-6 rounded-full bg-vio-l text-vio font-bold grid place-items-center text-xs shrink-0">${j + 1}</span><span><b>${t}</b> <span class="text-mu">${w}</span></span></li>`)}</ul>`;
-  return html`<div class="flex flex-wrap gap-2 mt-5">${ROLES.map((r, j) => html`<span key=${r.id} class="tag"><span class="w-2 h-2 rounded-sm" style=${{ background: COLS[j] }}/>${r.title}</span>`)}</div>`; };
+  return html`<div class="flex flex-wrap gap-2 mt-5">${ROLES.map((r, j) => html`<span key=${r.id} class="tag"><span class="w-2 h-2 rounded-sm" style=${{ background: COLS[j] }}/>${r.title}</span>`)}</div>`;
+};
 const HOW = [["Upload your resume", "Drop in a PDF or DOCX up to 10 MB. We check the file before anything else happens.", "upload"], ["Review and choose roles", "Fix anything that was extracted wrongly, then pick roles or paste a job description.", "target"], ["Run the alignment", "Watch each analysis stage complete, from text extraction to skill-gap analysis.", "zap"], ["Act on the results", "Read the ranking, close your gaps with the roadmap, and download a report.", "trend"]];
 
-const Landing = ({ onStart, onDemo }) => { const [m, setM] = useState(false), [sc, setSc] = useState(false);
+const Landing = ({ onStart, onDemo }) => {
+  const [m, setM] = useState(false), [sc, setSc] = useState(false);
   useEffect(() => { const f = () => setSc(window.scrollY > 12); f(); addEventListener("scroll", f, { passive: true }); return () => removeEventListener("scroll", f); }, []);
   const nav = id => { setM(false); goTo(id); };
   return html`<div class="font-sans text-ink">
@@ -117,28 +130,34 @@ const Landing = ({ onStart, onDemo }) => { const [m, setM] = useState(false), [s
 
   <footer class="bg-navy-950 text-white/60"><div class="max-w-6xl mx-auto px-5 py-12 grid md:grid-cols-[1.2fr_1fr] gap-8 items-start"><div><${Brand} dark/><p class="text-sm mt-4 max-w-sm leading-relaxed">Autonomous resume-to-job matching that explains every score and turns gaps into a plan.</p></div>
     <div class="flex flex-wrap gap-x-10 gap-y-3 text-sm md:justify-end">${[["features", "Features"], ["how", "How it works"], ["pipeline", "Analysis stages"]].map(([id, l]) => html`<button key=${id} onClick=${() => goTo(id)} class="hover:text-white transition-colors">${l}</button>`)}<button onClick=${() => onStart("in")} class="hover:text-white transition-colors">Sign in</button></div></div>
-    <div class="border-t border-white/10"><div class="max-w-6xl mx-auto px-5 py-5 text-xs flex flex-wrap justify-between gap-2"><span>${"© " + new Date().getFullYear() + " AlgoMind"}</span><span>Frontend prototype. No data is sent anywhere.</span></div></div></footer></div>`; };
+    <div class="border-t border-white/10"><div class="max-w-6xl mx-auto px-5 py-5 text-xs flex flex-wrap justify-between gap-2"><span>${"© " + new Date().getFullYear() + " AlgoMind"}</span><span>Frontend prototype. No data is sent anywhere.</span></div></div></footer></div>`;
+};
 
 /* ============ AUTH ============ */
 const Field = ({ id, label, icon, error, ok, right, ...rest }) => html`<div><label htmlFor=${id} class="text-[13px] font-semibold">${label}</label>
   <div class=${cx("field-wrap mt-1.5", error && "is-err", ok && !error && "is-ok")}><${Ic} n=${icon} s=${17} c="field-ic"/><input id=${id} aria-invalid=${!!error} aria-describedby=${error ? id + "-e" : undefined} class="field" ...${rest}/>${right}</div>
   ${error && html`<p id=${id + "-e"} role="alert" class="flex items-center gap-1.5 text-[12.5px] text-rose-600 mt-1.5 fade"><${Ic} n="alert" s=${13}/>${error}</p>`}</div>`;
-const validate = (m, f) => { const e = {}, em = f.email.trim();
+const validate = (m, f) => {
+  const e = {}, em = f.email.trim();
   if (m === "up" && f.name.trim().length < 2) e.name = "Enter your full name.";
   if (!em) e.email = "Enter your email address."; else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)) e.email = "Enter a valid email, like name@company.com.";
   if (!f.pw) e.pw = "Enter your password."; else if (m === "up" && f.pw.length < 8) e.pw = "Use at least 8 characters."; else if (m === "up" && !(/\d/.test(f.pw) && /[a-zA-Z]/.test(f.pw))) e.pw = "Mix letters and numbers.";
-  return e; };
+  return e;
+};
 const strength = p => { let s = 0; if (p.length >= 8) s++; if (p.length >= 12) s++; if (/[a-z]/.test(p) && /[A-Z]/.test(p)) s++; if (/\d/.test(p)) s++; if (/[^\w\s]/.test(p)) s++; return Math.min(s, 4); };
 const SL = ["Too short", "Weak", "Fair", "Good", "Strong"];
 
-const Auth = ({ onIn, mode, onBack }) => { const [m, setM] = useState(mode || "in"), [f, setF] = useState({ name: "", email: "", pw: "" }), [t, setT] = useState({}), [show, setShow] = useState(false), [busy, setBusy] = useState(false), [shake, setShake] = useState(0);
+const Auth = ({ onIn, mode, onBack }) => {
+  const [m, setM] = useState(mode || "in"), [f, setF] = useState({ name: "", email: "", pw: "" }), [t, setT] = useState({}), [show, setShow] = useState(false), [busy, setBusy] = useState(false), [shake, setShake] = useState(0);
   const er = validate(m, f), set = k => ev => setF(s => ({ ...s, [k]: ev.target.value })), blur = k => () => setT(s => ({ ...s, [k]: true })), vis = k => t[k] && er[k];
   const demo = () => onIn({ name: "Aarav Mehta", email: "demo@algomind.app" });
-  const go = async ev => { ev && ev.preventDefault(); setT({ name: true, email: true, pw: true });
+  const go = async ev => {
+    ev && ev.preventDefault(); setT({ name: true, email: true, pw: true });
     if (Object.keys(er).length) { setShake(n => n + 1); const k = ["name", "email", "pw"].find(x => er[x]); const el = document.getElementById("f-" + k); if (el) el.focus(); return; }
     setBusy(true); await sleep(650);
     const nm = m === "up" ? f.name.trim() : f.email.split("@")[0].replace(/[._-]+/g, " ").replace(/\b\w/g, c => c.toUpperCase());
-    onIn({ name: nm || "Aarav Mehta", email: f.email.trim() }); };
+    onIn({ name: nm || "Aarav Mehta", email: f.email.trim() });
+  };
   const sw = k => { setM(k); setT({}); };
   const st = strength(f.pw);
   return html`<div class="min-h-screen grid lg:grid-cols-[1fr_1.05fr] font-sans text-ink fade">
@@ -160,17 +179,21 @@ const Auth = ({ onIn, mode, onBack }) => { const [m, setM] = useState(mode || "i
             ${m === "up" && f.pw && html`<div class="mt-2.5 fade"><div class="grid grid-cols-4 gap-1.5">${[0, 1, 2, 3].map(i => html`<span key=${i} class="h-1.5 rounded-full transition-colors" style=${{ background: i < st ? (st < 2 ? "#E5484D" : st < 3 ? "#E8A317" : "#6C4BFF") : "#EAE7FB" }}/>`)}</div><p class="text-xs text-mu mt-1.5">Password strength: <b class="text-ink">${SL[st]}</b></p></div>`}</div>
           <${Btn} v="p" type="submit" c="w-full mt-1 py-3" disabled=${busy}>${busy ? html`<${Spinner}/>` : null}${busy ? "Please wait" : m === "in" ? "Sign in to dashboard" : "Create account"}<//></form>
         <button onClick=${demo} class="link mt-5 w-full text-sm text-center">Explore with the demo account</button>
-        <p class="text-xs text-mu mt-4 text-center">Frontend prototype. No data is sent anywhere.</p></div></div></div>`; };
+        <p class="text-xs text-mu mt-4 text-center">Frontend prototype. No data is sent anywhere.</p></div></div></div>`;
+};
 
 /* ============ WORKSPACE ============ */
-const Section = ({ k, l, items, set }) => { const [v, setV] = useState("");
+const Section = ({ k, l, items, set }) => {
+  const [v, setV] = useState("");
   return html`<div class="py-4 border-t border-bd first:border-t-0"><div class="flex items-center justify-between"><div class="text-sm font-bold">${l}</div><span class="text-xs text-mu tnum">${items.length}</span></div>
     <div class="flex flex-wrap gap-1.5 mt-2.5">${items.length ? items.map((t, i) => html`<${Tag} key=${t + i} t=${t} x=${() => set(k, a => a.filter((_, j) => j !== i))}/>`) : html`<span class="text-xs text-mu">Nothing here yet.</span>`}</div>
-    <input value=${v} onChange=${e => setV(e.target.value)} onKeyDown=${e => { if (e.key === "Enter" && v.trim()) { set(k, a => [...a, v.trim()]); setV(""); } }} placeholder=${"Add to " + l.toLowerCase() + ", press Enter"} aria-label=${"Add to " + l} class="mini-input mt-2.5"/></div>`; };
+    <input value=${v} onChange=${e => setV(e.target.value)} onKeyDown=${e => { if (e.key === "Enter" && v.trim()) { set(k, a => [...a, v.trim()]); setV(""); } }} placeholder=${"Add to " + l.toLowerCase() + ", press Enter"} aria-label=${"Add to " + l} class="mini-input mt-2.5"/></div>`;
+};
 
 const Stepper = ({ s }) => html`<ol class="flex flex-wrap gap-2.5 mt-7">${[["Add your resume", s[0]], ["Choose roles", s[1]], ["Run the analysis", s[2]]].map(([l, d], i) => html`<li key=${l} class=${cx("flex items-center gap-2.5 text-[13px] font-semibold pl-1.5 pr-4 py-1.5 rounded-full border transition-colors", d ? "bg-vio-l border-vio-m text-vio-d" : "bg-white border-bd text-mu")}><span class=${cx("w-6 h-6 rounded-full grid place-items-center text-xs", d ? "fill-brand text-white" : "bg-lav-100 text-mu")}>${d ? html`<${Ic} n="check" s=${13} w=${2.6}/>` : i + 1}</span>${l}</li>`)}</ol>`;
 
-const Workspace = ({ a }) => { const { prof, file, err, onFile, removeFile, fileRef, picked, toggle, cust, setCust, drawer, setDrawer, jd, setJd, addJd, run, total, setSec, over, setOver, useSampleResume } = a;
+const Workspace = ({ a }) => {
+  const { prof, file, err, onFile, removeFile, fileRef, picked, toggle, cust, setCust, drawer, setDrawer, jd, setJd, addJd, run, total, setSec, over, setOver, useSampleResume } = a;
   const has = file || prof, ext = file ? (file.name.split(".").pop() || "").toUpperCase() : "";
   return html`<main class="max-w-6xl mx-auto px-5 pb-16 fade"><div class="pt-10 md:pt-14 pb-2"><h1 class="text-3xl md:text-[2.8rem] font-extrabold tracking-tight leading-[1.08] max-w-3xl">See which roles your resume truly speaks to.</h1>
     <p class="text-mu mt-4 max-w-2xl text-[17px] leading-relaxed">AlgoMind compares the meaning of your projects and skills with each job description, ranks every role and explains each score.</p>
@@ -181,7 +204,7 @@ const Workspace = ({ a }) => { const { prof, file, err, onFile, removeFile, file
         <div class="mt-5" onDragOver=${e => { e.preventDefault(); setOver(true); }} onDragLeave=${() => setOver(false)} onDrop=${e => { e.preventDefault(); setOver(false); onFile(e.dataTransfer.files[0]); }}>
           ${!has ? html`<div role="button" tabIndex="0" onClick=${() => fileRef.current.click()} onKeyDown=${e => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), fileRef.current.click())} class=${cx("drop px-5 py-10 text-center cursor-pointer", over && "over")}>
               <span class="w-14 h-14 rounded-2xl fill-brand text-white grid place-items-center mx-auto shadow-glow"><${Ic} n="upload" s=${24}/></span><div class="font-bold mt-4">Drop your resume here</div><div class="text-sm text-mu mt-1">PDF or DOCX, up to 10 MB. Or <span class="text-vio font-semibold">browse files</span>.</div></div>`
-          : html`<div class=${cx("inset p-4 transition-shadow", over && "ring-2 ring-vio")}>
+      : html`<div class=${cx("inset p-4 transition-shadow", over && "ring-2 ring-vio")}>
               <div class="flex items-center gap-3.5"><span class=${cx("w-12 h-12 rounded-xl grid place-items-center shrink-0 font-bold text-[11px]", ext === "PDF" ? "bg-vio-l text-vio" : "bg-blu-l text-blu-d")}>${file ? ext : html`<${Ic} n="file" s=${20}/>`}</span>
                 <div class="min-w-0 flex-1"><div class="font-semibold text-sm truncate">${file ? file.name : "Sample resume"}</div>
                   <div class="text-xs text-mu mt-0.5">${file ? fmtSize(file.size) + " · " : ""}${file && file.status === "reading" ? "Reading file" : file ? "Ready" : "Built-in example profile"}</div></div>
@@ -190,23 +213,28 @@ const Workspace = ({ a }) => { const { prof, file, err, onFile, removeFile, file
         <input ref=${fileRef} type="file" hidden accept=".pdf,.docx" onChange=${e => { onFile(e.target.files[0]); e.target.value = ""; }}/>
         <div class="min-h-[1.4em] mt-2" aria-live="polite">${err && html`<div role="alert" class="flex items-start gap-2 text-[13px] text-rose-700 bg-rose-50 border border-rose-200 rounded-xl px-3.5 py-2.5 fade"><${Ic} n="alert" s=${15} c="mt-0.5"/>${err}</div>`}</div>
         ${prof ? html`<div class="mt-3 fade"><div class="text-[13px] text-mu flex items-start gap-2 bg-lav-50 border border-bd rounded-xl px-3.5 py-2.5"><${Ic} n="info" s=${15} c="text-vio mt-0.5"/><span>${prof.src ? "Preview for " + prof.src + " (sample extraction). " : "Sample resume loaded. "}Edit anything that looks wrong.</span></div><div class="mt-2">${SEC.map(([k, l]) => html`<${Section} key=${k} k=${k} l=${l} items=${prof[k]} set=${setSec}/>`)}</div></div>`
-          : html`<div class="border border-dashed border-bd rounded-2xl p-5 text-center text-sm text-mu mt-1">Your parsed skills, education, projects, certifications, experience, internships and achievements will appear here.<div class="mt-3"><${Btn} onClick=${useSampleResume}>Use sample resume<//></div></div>`}<//>
+      : html`<div class="border border-dashed border-bd rounded-2xl p-5 text-center text-sm text-mu mt-1">Your parsed skills, education, projects, certifications, experience, internships and achievements will appear here.<div class="mt-3"><${Btn} onClick=${useSampleResume}>Use sample resume<//></div></div>`}<//>
       <${Card} c="p-6 md:p-7"><h2 class="font-bold text-lg">Target roles</h2><p class="text-sm text-mu mt-0.5 mb-5">Select roles to rank, or paste your own job description.</p>
-        <div class="grid gap-2.5">${ROLES.map(x => { const on = picked.includes(x.id); return html`<button key=${x.id} role="checkbox" aria-checked=${on} onClick=${() => toggle(x.id)} class=${cx("flex items-center gap-3.5 text-left px-4 py-3.5 rounded-xl border transition-all", on ? "border-vio bg-vio-l shadow-[0_0_0_3px_rgba(108,75,255,.1)]" : "border-bd bg-white hover:border-vio-m hover:bg-lav-50")}>
-          <span class=${cx("w-5 h-5 rounded-md border grid place-items-center transition-colors", on ? "fill-brand border-transparent text-white" : "border-slate-300 bg-white")}>${on && html`<${Ic} n="check" s=${13} w=${2.8}/>`}</span><span class="font-semibold text-sm">${x.title}</span></button>`; })}
+        <div class="grid gap-2.5">${ROLES.map(x => {
+        const on = picked.includes(x.id); return html`<button key=${x.id} role="checkbox" aria-checked=${on} onClick=${() => toggle(x.id)} class=${cx("flex items-center gap-3.5 text-left px-4 py-3.5 rounded-xl border transition-all", on ? "border-vio bg-vio-l shadow-[0_0_0_3px_rgba(108,75,255,.1)]" : "border-bd bg-white hover:border-vio-m hover:bg-lav-50")}>
+          <span class=${cx("w-5 h-5 rounded-md border grid place-items-center transition-colors", on ? "fill-brand border-transparent text-white" : "border-slate-300 bg-white")}>${on && html`<${Ic} n="check" s=${13} w=${2.8}/>`}</span><span class="font-semibold text-sm">${x.title}</span></button>`;
+      })}
           ${cust.map((x, i) => html`<div key=${x.id} class="flex items-center justify-between px-4 py-3.5 rounded-xl border border-vio bg-vio-l text-sm"><span class="font-semibold flex items-center gap-2.5"><${Ic} n="file" s=${16} c="text-vio"/>${x.title}</span><button aria-label=${"Remove " + x.title} class="text-mu hover:text-rose-600 p-1" onClick=${() => setCust(c => c.filter((_, j) => j !== i))}><${Ic} n="x"/></button></div>`)}</div>
         <button onClick=${() => setDrawer(!drawer)} aria-expanded=${drawer} class="mt-4 text-sm font-semibold text-vio flex items-center gap-1.5 hover:text-vio-d"><${Ic} n="plus" s=${15}/>Paste a job description</button>
         ${drawer && html`<div class="mt-3 fade"><textarea value=${jd} onChange=${e => setJd(e.target.value)} placeholder="Paste the full job description here. The first line becomes the role name." class="field-area"/><div class="flex items-center justify-between mt-2"><${Btn} c="btn-sm" onClick=${addJd}>Add as a role<//><span class=${cx("text-xs tnum", jd.trim().length >= 30 ? "text-ok" : "text-mu")}>${jd.trim().length} characters, 30 minimum</span></div></div>`}
         <div class="hair mt-6"/>
         <${Btn} v="p" c="w-full mt-6 btn-lg" disabled=${!prof || !total} onClick=${run}><${Ic} n="spark" s=${17}/>Run semantic alignment<//>
-        <p class="text-xs text-mu text-center mt-3">${prof && total ? total + " role" + (total > 1 ? "s" : "") + " will be compared." : "Add a resume and select at least one role to continue."}</p><//></div></main>`; };
+        <p class="text-xs text-mu text-center mt-3">${prof && total ? total + " role" + (total > 1 ? "s" : "") + " will be compared." : "Add a resume and select at least one role to continue."}</p><//></div></main>`;
+};
 
-const Running = ({ step }) => { const pct = Math.round(step / STEPS.length * 100);
+const Running = ({ step }) => {
+  const pct = Math.round(step / STEPS.length * 100);
   return html`<main class="max-w-xl mx-auto px-5 py-14 md:py-20 fade"><${Card} c="p-7 md:p-9"><div class="flex items-center gap-5"><${Ring} v=${pct} s=${84} w=${8}/><div><h2 class="font-bold text-xl">Running semantic alignment</h2><p class="text-sm text-mu mt-1">${step >= STEPS.length ? "Preparing your results" : STEPS[step]}</p></div></div>
     <div class="mt-6"><${Bar} v=${pct}/></div>
     <ul class="grid gap-3 mt-7">${STEPS.map((s, i) => html`<li key=${s} class=${cx("flex items-center gap-3 text-sm transition-colors", i <= step ? "text-ink font-medium" : "text-slate-400")}>
       <span class=${cx("w-6 h-6 rounded-full grid place-items-center", i < step ? "fill-brand text-white" : i === step ? "border-2 border-vio text-vio" : "border border-bd")}>${i < step ? html`<${Ic} n="check" s=${13} w=${2.8}/>` : i === step && step < STEPS.length ? html`<span class="w-1.5 h-1.5 rounded-full bg-vio pulse-dot"/>` : null}</span>${s}</li>`)}</ul>
-    <p class="text-xs text-mu mt-7 pt-5 border-t border-bd">Demonstration only: each stage is simulated with mock data.</p><//></main>`; };
+    <p class="text-xs text-mu mt-7 pt-5 border-t border-bd">Demonstration only: each stage is simulated with mock data.</p><//></main>`;
+};
 
 /* ============ RESULTS ============ */
 const SH = { skills: "Skills", education: "Edu.", projects: "Proj.", certifications: "Certs", experience: "Exp.", internships: "Intern.", achievements: "Awards" };
@@ -223,27 +251,37 @@ const Overview = ({ r }) => html`<div class="grid gap-5 fade">
       ${r.weak.map(([t, d]) => html`<div key=${t} class="mt-4 text-sm pl-3 border-l-2 border-amber-300"><b>${t}</b> <span class="text-xs text-am font-semibold">weak match</span><p class="text-mu mt-0.5">${d}</p></div>`)}</div></div>
   <div class="inset p-5 md:p-6"><h4 class="font-bold">Recommended improvements</h4><ol class="mt-4 grid gap-3.5">${r.recs.map((t, i) => html`<li key=${i} class="flex gap-3.5 text-sm items-start"><span class="w-6 h-6 rounded-full fill-brand text-white grid place-items-center text-xs font-bold shrink-0">${i + 1}</span><span class="text-mu leading-relaxed pt-0.5">${t}</span></li>`)}</ol></div></div>`;
 
-const Gaps = ({ r }) => { const cnt = { High: 0, Medium: 0, Low: 0 }; r.gaps.forEach(([, c, q]) => cnt[pri(q - c)]++);
+const Gaps = ({ r }) => {
+  const cnt = { High: 0, Medium: 0, Low: 0 }; r.gaps.forEach(([, c, q]) => cnt[pri(q - c)]++);
   return html`<div class="grid gap-5 fade"><div class="grid grid-cols-3 gap-3">${Object.entries(cnt).map(([k, n]) => html`<div key=${k} class="inset p-4"><div class="text-2xl font-extrabold tnum">${n}</div><div class="text-xs text-mu mt-0.5">${k} priority</div></div>`)}</div>
   <div class="inset p-5 md:p-6"><h4 class="font-bold">Skill gap analysis: ${r.title}</h4><p class="text-[13px] text-mu mt-1">The filled bar is your current level. The amber marker is what the role expects, and the hatched area is the gap.</p>
-  ${r.gaps.map(([s, c, q]) => { const p = pri(q - c); return html`<div key=${s} class="mt-6"><div class="flex justify-between items-center gap-3 text-sm"><span class="font-semibold">${s}</span><span class="flex items-center gap-2.5"><span class="text-mu text-xs tnum">${c}% of ${q}% needed</span><span class=${cx("text-[11px] font-bold px-2 py-0.5 rounded-full border", PRI[p])}>${p}</span></span></div>
-    <div class="relative mt-2.5"><div class="track h-3"/><div class="absolute inset-y-0 left-0 w-full"><div class="absolute inset-y-0 gap-seg rounded-full" style=${{ left: c + "%", width: (q - c) + "%" }}/></div><div class="absolute inset-y-0 left-0 w-full"><${Bar} v=${c} h="h-3"/></div><span class="absolute -top-1.5 w-[3px] h-[24px] bg-am rounded" style=${{ left: "calc(" + q + "% - 1px)" }}/></div></div>`; })}</div></div>`; };
+  ${r.gaps.map(([s, c, q]) => {
+    const p = pri(q - c); return html`<div key=${s} class="mt-6"><div class="flex justify-between items-center gap-3 text-sm"><span class="font-semibold">${s}</span><span class="flex items-center gap-2.5"><span class="text-mu text-xs tnum">${c}% of ${q}% needed</span><span class=${cx("text-[11px] font-bold px-2 py-0.5 rounded-full border", PRI[p])}>${p}</span></span></div>
+    <div class="relative mt-2.5"><div class="track h-3"/><div class="absolute inset-y-0 left-0 w-full"><div class="absolute inset-y-0 gap-seg rounded-full" style=${{ left: c + "%", width: (q - c) + "%" }}/></div><div class="absolute inset-y-0 left-0 w-full"><${Bar} v=${c} h="h-3"/></div><span class="absolute -top-1.5 w-[3px] h-[24px] bg-am rounded" style=${{ left: "calc(" + q + "% - 1px)" }}/></div></div>`;
+  })}</div></div>`;
+};
 
-const Road = ({ r, done, tog }) => { const keys = r.road.flatMap(([, , it], i) => it.map((_, j) => r.id + ":" + i + ":" + j)), n = keys.filter(k => done[k]).length, pct = Math.round(n / keys.length * 100);
+const Road = ({ r, done, tog }) => {
+  const keys = r.road.flatMap(([, , it], i) => it.map((_, j) => r.id + ":" + i + ":" + j)), n = keys.filter(k => done[k]).length, pct = Math.round(n / keys.length * 100);
   return html`<div class="fade grid gap-5"><div class="inset p-5 flex items-center gap-5"><${Ring} v=${pct} s=${64} w=${7}/><div class="flex-1 min-w-0"><h4 class="font-bold">Career improvement roadmap: ${r.title}</h4><p class="text-[13px] text-mu mt-0.5">A phased plan built from your skill gaps. Tick tasks as you finish them.</p><div class="text-xs text-mu mt-2 tnum">${n} of ${keys.length} tasks done</div></div></div>
-  <ol class="relative grid gap-4 pl-0">${r.road.map(([w, t, it], i) => { const dn = it.filter((_, j) => done[r.id + ":" + i + ":" + j]).length;
+  <ol class="relative grid gap-4 pl-0">${r.road.map(([w, t, it], i) => {
+    const dn = it.filter((_, j) => done[r.id + ":" + i + ":" + j]).length;
     return html`<li key=${t} class="relative flex gap-4">${i < r.road.length - 1 && html`<span class="absolute left-[19px] top-11 bottom-[-16px] w-px bg-gradient-to-b from-vio-m to-bd"/>`}<span class=${cx("w-10 h-10 rounded-full grid place-items-center font-bold text-sm shrink-0 relative z-10 transition-colors", dn === it.length ? "fill-brand text-white shadow-glow" : "bg-white border-2 border-vio-m text-vio")}>${dn === it.length ? html`<${Ic} n="check" s=${17} w=${2.6}/>` : i + 1}</span>
       <div class="inset p-5 flex-1 min-w-0"><div class="flex flex-wrap justify-between gap-2"><div><span class="text-xs font-semibold text-vio">${w}</span><h4 class="font-bold">${t}</h4></div><span class="text-xs text-mu tnum self-start">${dn}/${it.length}</span></div>
-        <ul class="mt-3 grid gap-2">${it.map((x, j) => { const k = r.id + ":" + i + ":" + j, on = !!done[k]; return html`<li key=${k}><button role="checkbox" aria-checked=${on} onClick=${() => tog(k)} class="w-full flex items-start gap-3 text-left text-sm rounded-lg px-2.5 py-2 -mx-2.5 hover:bg-lav-50 transition-colors"><span class=${cx("w-5 h-5 mt-px rounded-md border grid place-items-center shrink-0 transition-colors", on ? "fill-brand border-transparent text-white" : "border-slate-300 bg-white")}>${on && html`<${Ic} n="check" s=${12} w=${3}/>`}</span><span class=${cx("transition-colors", on ? "text-slate-400 line-through" : "text-mu")}>${x}</span></button></li>`; })}</ul></div></li>`; })}</ol></div>`; };
+        <ul class="mt-3 grid gap-2">${it.map((x, j) => { const k = r.id + ":" + i + ":" + j, on = !!done[k]; return html`<li key=${k}><button role="checkbox" aria-checked=${on} onClick=${() => tog(k)} class="w-full flex items-start gap-3 text-left text-sm rounded-lg px-2.5 py-2 -mx-2.5 hover:bg-lav-50 transition-colors"><span class=${cx("w-5 h-5 mt-px rounded-md border grid place-items-center shrink-0 transition-colors", on ? "fill-brand border-transparent text-white" : "border-slate-300 bg-white")}>${on && html`<${Ic} n="check" s=${12} w=${3}/>`}</span><span class=${cx("transition-colors", on ? "text-slate-400 line-through" : "text-mu")}>${x}</span></button></li>`; })}</ul></div></li>`;
+  })}</ol></div>`;
+};
 
-const Compare = ({ res }) => { const [sel, setSel] = useState(res.map(r => r.id));
+const Compare = ({ res }) => {
+  const [sel, setSel] = useState(res.map(r => r.id));
   if (res.length < 2) return html`<div class="inset p-6 text-mu text-sm">Select at least two roles in the workspace to compare them.</div>`;
   const rs = res.filter(r => sel.includes(r.id)), ms = ["Overall", ...Object.keys(res[0].b)], fq = {};
   rs.forEach(r => r.missing.forEach(s => fq[s] = (fq[s] || 0) + 1));
   return html`<div class="grid gap-5 fade"><div class="inset p-5 md:p-6"><h4 class="font-bold">Compare roles</h4><p class="text-[13px] text-mu mt-0.5">Toggle roles on or off. At least one stays selected.</p><div class="flex flex-wrap gap-2 mt-4">${res.map((r, i) => html`<button key=${r.id} aria-pressed=${sel.includes(r.id)} onClick=${() => setSel(s => s.includes(r.id) ? (s.length > 1 ? s.filter(x => x !== r.id) : s) : [...s, r.id])}
       class=${cx("flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-xl border transition-all", sel.includes(r.id) ? "border-vio bg-vio-l text-ink" : "border-bd bg-white text-mu hover:border-vio-m")}><span class="w-2.5 h-2.5 rounded-sm" style=${{ background: COLS[i % 4] }}/>${r.title}</button>`)}</div>
     ${ms.map(m => html`<div key=${m} class="mt-6"><div class="text-sm font-bold mb-2.5">${m}</div><div class="grid gap-2.5">${rs.map(r => { const v = m === "Overall" ? r.score : r.b[m]; return html`<div key=${r.id} class="grid grid-cols-[104px_1fr_42px] sm:grid-cols-[200px_1fr_46px] gap-3 items-center text-xs sm:text-sm"><span class="text-mu truncate">${r.title}</span><${Bar} v=${v} col=${COLS[res.indexOf(r) % 4]} h="h-2.5"/><span class="font-bold text-right tnum">${v}%</span></div>`; })}</div></div>`)}</div>
-    <div class="inset p-5 md:p-6"><h4 class="font-bold">Skills missing across the selected roles</h4><div class="grid gap-2.5 mt-4">${Object.entries(fq).sort((a, b) => b[1] - a[1]).map(([s, n]) => html`<div key=${s} class="flex justify-between items-center text-sm"><${Tag} t=${s} k="am"/><span class="text-mu text-xs tnum">${n} of ${rs.length} role${rs.length > 1 ? "s" : ""}</span></div>`)}</div></div></div>`; };
+    <div class="inset p-5 md:p-6"><h4 class="font-bold">Skills missing across the selected roles</h4><div class="grid gap-2.5 mt-4">${Object.entries(fq).sort((a, b) => b[1] - a[1]).map(([s, n]) => html`<div key=${s} class="flex justify-between items-center text-sm"><${Tag} t=${s} k="am"/><span class="text-mu text-xs tnum">${n} of ${rs.length} role${rs.length > 1 ? "s" : ""}</span></div>`)}</div></div></div>`;
+};
 
 const JobCard = ({ x, i, active, onPick }) => html`<button onClick=${onPick} aria-pressed=${active} class=${cx("surface lift text-left p-5 flex flex-col gap-4 w-full", active && "!border-vio shadow-[0_0_0_4px_rgba(108,75,255,.12),var(--sh-2)]")}>
   <div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex items-center gap-2 mb-1.5"><span class="text-xs font-bold text-vio bg-vio-l rounded-full px-2 py-0.5">#${i + 1}</span>${i === 0 && html`<span class="text-xs font-semibold text-ok bg-ok-l rounded-full px-2 py-0.5">Best fit</span>`}</div><h4 class="font-bold text-[17px] leading-snug">${x.title}</h4></div><${Ring} v=${x.score} s=${62} w=${6}/></div>
@@ -251,7 +289,8 @@ const JobCard = ({ x, i, active, onPick }) => html`<button onClick=${onPick} ari
   <div><div class="text-xs font-semibold text-mu mb-1.5">Missing</div><div class="flex flex-wrap gap-1.5">${x.missing.slice(0, 3).map(s => html`<${Tag} key=${s} t=${s} k="am"/>`)}${x.missing.length > 3 && html`<span class="tag">+${x.missing.length - 3}</span>`}</div></div>
   <span class="text-sm font-semibold text-vio flex items-center gap-1.5 mt-auto">${active ? "Viewing analysis" : "View analysis"}<${Ic} n="arrow" s=${15}/></span></button>`;
 
-const Results = ({ a }) => { const { res, prof, r, act, setAct, tab, setTab, hist, openHist, done, tog, setView, download } = a; const detail = useRef();
+const Results = ({ a }) => {
+  const { res, prof, r, act, setAct, tab, setTab, hist, openHist, done, tog, setView, download } = a; const detail = useRef();
   const top = res[0], avg = Math.round(res.reduce((s, x) => s + x.score, 0) / res.length), uniq = [...new Set(res.flatMap(x => x.missing))], dims = Object.keys(res[0].b), avgD = {}; dims.forEach(k => avgD[k] = Math.round(res.reduce((s, x) => s + x.b[k], 0) / res.length));
   const total = SEC.reduce((s, [k]) => s + prof[k].length, 0), idx = res.findIndex(x => x.id === r.id);
   const pick = id => { setAct(id); setTab("ov"); setTimeout(() => detail.current && detail.current.scrollIntoView({ behavior: "smooth", block: "start" }), 60); };
@@ -283,17 +322,21 @@ const Results = ({ a }) => { const { res, prof, r, act, setAct, tab, setTab, his
     <section ref=${detail} class="surface overflow-hidden mt-8 scroll-mt-24"><div class="navy-bg p-6 md:p-8 flex items-center gap-5 text-white overflow-hidden"><${Ring} v=${r.score} s=${78} w=${8} dark/><div class="relative min-w-0"><div class="text-xs text-white/60 font-medium">Rank ${idx + 1} of ${res.length}</div><h2 class="text-xl md:text-2xl font-extrabold tracking-tight">${r.title}</h2><p class="text-sm text-white/60 mt-0.5">Overall alignment score</p></div></div>
       <div class="flex gap-1 overflow-x-auto hide-sb border-b border-bd bg-white px-3 md:px-5" role="tablist">${[["ov", "Overview", "bars"], ["gap", "Skill gaps", "alert"], ["rm", "Roadmap", "route"], ["cmp", "Compare roles", "cols"]].map(([k, l, ic]) => html`<button key=${k} role="tab" aria-selected=${tab === k} onClick=${() => setTab(k)}
         class=${cx("flex items-center gap-2 px-4 py-3.5 text-sm font-semibold whitespace-nowrap border-b-2 -mb-px transition-colors", tab === k ? "border-vio text-ink" : "border-transparent text-mu hover:text-ink")}><${Ic} n=${ic} s=${16} c=${tab === k ? "text-vio" : ""}/>${l}</button>`)}</div>
-      <div class="p-4 md:p-6 bg-lav-50 min-w-0">${tab === "ov" && html`<${Overview} key=${r.id} r=${r}/>`}${tab === "gap" && html`<${Gaps} key=${r.id} r=${r}/>`}${tab === "rm" && html`<${Road} key=${r.id} r=${r} done=${done} tog=${tog}/>`}${tab === "cmp" && html`<${Compare} res=${res}/>`}</div></section></main>`; };
+      <div class="p-4 md:p-6 bg-lav-50 min-w-0">${tab === "ov" && html`<${Overview} key=${r.id} r=${r}/>`}${tab === "gap" && html`<${Gaps} key=${r.id} r=${r}/>`}${tab === "rm" && html`<${Road} key=${r.id} r=${r} done=${done} tog=${tog}/>`}${tab === "cmp" && html`<${Compare} res=${res}/>`}</div></section></main>`;
+};
 
 /* ============ REPORT & DOWNLOAD ============ */
-function reportHtml(res, prof) { const e = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+function reportHtml(res, prof) {
+  const e = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>AlgoMind analysis report</title><style>body{font:14px/1.6 system-ui,sans-serif;max-width:760px;margin:32px auto;padding:0 20px;color:#0A0E2A}h1{font-size:26px;letter-spacing:-.02em}h2{margin-top:30px;border-bottom:2px solid #E0DBFF;padding-bottom:4px;color:#3B26B8}table{border-collapse:collapse;width:100%}td,th{border:1px solid #E3E1F5;padding:6px 10px;text-align:left}th{background:#F6F5FF}</style></head><body><h1>AlgoMind: resume-to-role analysis</h1><p>Candidate: ${e(prof.name)}<br>Generated: ${new Date().toLocaleDateString()}<br>Note: values in this report are demonstration data.</p>
 <h2>Role ranking</h2><table><tr><th>Rank</th><th>Role</th><th>Alignment</th></tr>${res.map((r, i) => `<tr><td>${i + 1}</td><td>${e(r.title)}</td><td>${r.score}%</td></tr>`).join("")}</table>
-${res.map(r => `<h2>${e(r.title)} (${r.score}%)</h2><p>${e(r.why)}</p><p><b>Matched:</b> ${e(r.matched.join(", "))}</p><p><b>Missing:</b> ${e(r.missing.join(", "))}</p><p><b>Recommendations:</b></p><ul>${r.recs.map(x => `<li>${e(x)}</li>`).join("")}</ul><p><b>Roadmap:</b></p><ul>${r.road.map(p => `<li>${e(p[0])}: ${e(p[1])}</li>`).join("")}</ul>`).join("")}</body></html>`; }
-async function saveFile(name, data) { try { if (window.claude) { const d = await claude.use("downloads"); await d.save({ filename: name, data }); return true; } } catch (e) { if (e && e.code === "declined") return false; }
-  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data], { type: "text/html" })); a.download = name; a.click(); return true; }
+${res.map(r => `<h2>${e(r.title)} (${r.score}%)</h2><p>${e(r.why)}</p><p><b>Matched:</b> ${e(r.matched.join(", "))}</p><p><b>Missing:</b> ${e(r.missing.join(", "))}</p><p><b>Recommendations:</b></p><ul>${r.recs.map(x => `<li>${e(x)}</li>`).join("")}</ul><p><b>Roadmap:</b></p><ul>${r.road.map(p => `<li>${e(p[0])}: ${e(p[1])}</li>`).join("")}</ul>`).join("")}</body></html>`;
+}
+async function saveFile(name, data) {
+  try { if (window.claude) { const d = await claude.use("downloads"); await d.save({ filename: name, data }); return true; } } catch (e) { if (e && e.code === "declined") return false; }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data], { type: "text/html" })); a.download = name; a.click(); return true;
+}
 
-/* ============ APP ============ */
 const App = () => {
   const [user, setUser] = useState(null), [gate, setGate] = useState("landing"), [view, setView] = useState("work"), [prof, setProf] = useState(null), [picked, setPicked] = useState(["ml", "da", "ds", "sd"]),
     [cust, setCust] = useState([]), [res, setRes] = useState(null), [act, setAct] = useState(null), [tab, setTab] = useState("ov"), [step, setStep] = useState(0),
@@ -302,26 +345,107 @@ const App = () => {
   const fileRef = useRef(), tok = useRef(0);
   useEffect(() => { if (!msg) return; const t = setTimeout(() => setMsg(""), 2600); return () => clearTimeout(t); }, [msg]);
   const rank = (ids, c) => [...ROLES.filter(r => ids.includes(r.id)), ...c].sort((a, b) => b.score - a.score);
-  const show = (r, src, push = true) => { setRes(r); setAct(r[0].id); setTab("ov"); setView("dash"); scrollTo(0, 0);
-    if (push) setHist(h => [{ id: Date.now() + Math.random(), res: r, top: r[0].title, score: r[0].score, n: r.length, src: src || "Sample resume", time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }, ...h].slice(0, 8)); };
+  const show = (r, src, push = true) => {
+    setRes(r); setAct(r[0].id); setTab("ov"); setView("dash"); scrollTo(0, 0);
+    if (push) setHist(h => [{ id: Date.now() + Math.random(), res: r, top: r[0].title, score: r[0].score, n: r.length, src: src || "Sample resume", time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }, ...h].slice(0, 8));
+  };
   const openHist = h => { setRes(h.res); setAct(h.res[0].id); setTab("ov"); scrollTo(0, 0); };
   const setSec = (k, fn) => setProf(p => ({ ...p, [k]: fn(p[k]) }));
   const removeFile = () => { tok.current++; setFile(null); setProf(null); setErr(""); };
   const useSampleResume = () => { tok.current++; setFile(null); setErr(""); setProf(structuredClone(SAMPLE)); };
-  const onFile = async f => { setErr(""); if (!f) return;
+
+  const onFile = async f => {
+    setErr(""); if (!f) return;
     if (!/\.(pdf|docx)$/i.test(f.name)) return setErr("Unsupported file type. Upload a PDF or DOCX resume.");
     if (f.size === 0) return setErr("This file is empty. Choose a resume that has content.");
     if (f.size > 10 * 1024 * 1024) return setErr("This file is larger than 10 MB. Upload a smaller one.");
-    const my = ++tok.current; setProf(null); setFile({ name: f.name, size: f.size, progress: 0, status: "reading" });
-    try { await new Promise((ok, no) => { const rd = new FileReader(); rd.onprogress = e => { if (e.lengthComputable && my === tok.current) setFile(x => x && { ...x, progress: Math.min(99, Math.round(e.loaded / e.total * 100)) }); }; rd.onload = ok; rd.onerror = () => no(rd.error); rd.readAsArrayBuffer(f); });
-      for (const p of [35, 70, 100]) { if (my !== tok.current) return; setFile(x => x && { ...x, progress: p }); await sleep(240); } }
-    catch (e) { if (my === tok.current) { setFile(null); setErr("We could not read this file. Try saving it again and re-uploading."); } return; }
-    if (my !== tok.current) return;
-    setFile(x => x && { ...x, status: "ready", progress: 100 }); setProf({ ...structuredClone(SAMPLE), src: f.name }); setMsg("Sample extraction loaded for " + f.name); };
+
+    const my = ++tok.current;
+    setProf(null);
+    setFile({ name: f.name, size: f.size, progress: 30, status: "reading" });
+
+    try {
+      const formData = new FormData();
+      formData.append("resume", f);
+
+      const response = await fetch("http://127.0.0.1:5000/api/upload", {
+        method: "POST",
+        body: formData
+      });
+
+      const text = await response.text();
+      let data = null;
+      try {
+        data = JSON.parse(text);
+      } catch (_) {
+        data = null;
+      }
+
+      if (!response.ok) {
+        const errorMsg = (data && data.error) ? data.error : `HTTP error ${response.status}${text ? ": " + text.slice(0, 100) : ""}`;
+        throw new Error(errorMsg);
+      }
+
+      if (!data) {
+        throw new Error("Invalid JSON response from server");
+      }
+
+      if (my !== tok.current) return;
+      setFile(x => x && { ...x, status: "ready", progress: 100 });
+      setProf({ ...data, src: f.name });
+      setMsg("Extracted resume data from " + f.name);
+    } catch (e) {
+      if (my === tok.current) {
+        setFile(null);
+        setErr(e.message === "Failed to fetch" ? "Could not connect to the backend server. Make sure python app.py is running." : (e.message || "Upload failed"));
+      }
+    }
+  };
+
   const sample = () => { tok.current++; setFile(null); setErr(""); setProf(structuredClone(SAMPLE)); setPicked(ROLES.map(r => r.id)); setCust([]); show(rank(ROLES.map(r => r.id), []), "Sample resume"); };
-  const run = async () => { const src = file ? file.name : "Sample resume"; setView("run"); scrollTo(0, 0); for (let i = 0; i < STEPS.length; i++) { setStep(i); await sleep(520); } setStep(STEPS.length); await sleep(350); show(rank(picked, cust), src); };
-  const addJd = () => { const t = jd.trim(); if (t.length < 30) return setMsg("Paste a fuller job description (at least a few lines)."); const title = t.split("\n")[0].slice(0, 36);
-    setCust(c => [...c, customRole(title, c.length)]); setJd(""); setDrawer(false); };
+
+  const run = async () => {
+    const src = file ? file.name : "Sample resume";
+    setView("run");
+    scrollTo(0, 0);
+
+    const selectedRoles = [
+      ...ROLES.filter(r => picked.includes(r.id)).map(r => ({ id: r.id, title: r.title, req_skills: r.matched.concat(r.missing) })),
+      ...cust.map(c => ({ id: c.id, title: c.title, jd_text: c.jd || "" }))
+    ];
+
+    try {
+      const apiPromise = fetch("http://127.0.0.1:5000/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ profile: prof, roles: selectedRoles })
+      });
+
+      for (let i = 0; i < STEPS.length; i++) {
+        setStep(i);
+        await sleep(300);
+      }
+
+      const response = await apiPromise;
+      const data = await response.json();
+      setStep(STEPS.length);
+      await sleep(250);
+
+      if (response.ok && data.results) {
+        show(data.results, src);
+      } else {
+        throw new Error(data.error || "Analysis failed");
+      }
+    } catch (error) {
+      setView("work");
+      setMsg("Analysis error: Backend server check karo.");
+    }
+  };
+
+  const addJd = () => {
+    const t = jd.trim(); if (t.length < 30) return setMsg("Paste a fuller job description (at least a few lines)."); const title = t.split("\n")[0].slice(0, 36);
+    setCust(c => [...c, customRole(title, c.length)]); setJd(""); setDrawer(false);
+  };
   const download = async () => { if (await saveFile("algomind-analysis-report.html", reportHtml(res, prof))) setMsg("Report saved."); };
   const toggle = id => setPicked(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
   const tog = k => setDone(d => ({ ...d, [k]: !d[k] }));
