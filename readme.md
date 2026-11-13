@@ -198,12 +198,16 @@ npm start
 ## 👥 Team Members & Roles
 
 | Serial | Member Name | Role | Core Responsibility |
-| :---: | :--- | :--- | :--- |
-| **1** | **Somya Goyal** | Team Leader | Machine Learning Engine (SBERT Embeddings, spaCy NLP, RAG Pipeline & Vector Similarity) |
-| **2** | **Yashashvi Gupta** | Core Member | Backend Development (Flask REST API), Database Management (MongoDB) & Gemini API Integration |
-| **3** | **Shivangi Goel** | Core Member | Frontend UI Development (React.js, HTML/CSS, JavaScript & Component Design) |
+|---|---|---|---|
+| **1** | **Somya Goyal** | ML & NLP Lead | SBERT Embeddings, spaCy NLP Processing, Resume Text Extraction, RAG Pipeline, Semantic Similarity & Job Matching Algorithm |
+| **2** | **Yashashvi Gupta** | Backend & Database Lead | Flask REST API Development, MongoDB Database Design, Gemini API Integration, Backend Logic, Data Processing & API Endpoints |
+| **3** | **Shivangi Goel** | Frontend & UI/UX Lead | React.js Development, Complete UI/UX Design, Resume Upload Interface, Interactive Dashboard, Job Matching Results Display, API Integration & Responsive Web Design |
 
----
+### Shared Responsibilities
+- System Integration & End-to-End Testing
+- Project Documentation
+- Error Handling & Performance Testing
+- Final Project Presentation & Demonstration
 
 ## 📜 References
 
