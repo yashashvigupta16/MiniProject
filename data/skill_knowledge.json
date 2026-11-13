@@ -1,0 +1,49 @@
+{
+    "knowledge": [
+        {
+            "skill": "Python",
+            "content": "Python is a programming language used for application development, automation, data analysis and machine learning.",
+            "recommendation": "Learn Python variables, data types, conditional statements, loops, functions, lists, dictionaries and object-oriented programming. Practice coding problems regularly."
+        },
+        {
+            "skill": "SQL",
+            "content": "SQL is used to store, retrieve, filter and manage data in relational databases.",
+            "recommendation": "Learn SELECT, WHERE, ORDER BY, GROUP BY, HAVING, JOIN, subqueries and aggregate functions. Practice writing queries using sample databases."
+        },
+        {
+            "skill": "Problem Solving",
+            "content": "Problem solving involves analyzing problems, developing logical solutions and writing efficient algorithms.",
+            "recommendation": "Practice arrays, strings, searching, sorting, binary search and basic algorithmic problems. Learn to analyze time and space complexity."
+        },
+        {
+            "skill": "Git",
+            "content": "Git is a version control system used to track code changes and collaborate with developers.",
+            "recommendation": "Learn git init, add, commit, push, pull, clone, branch and merge. Practice maintaining projects using GitHub repositories."
+        },
+        {
+            "skill": "Machine Learning",
+            "content": "Machine Learning involves building models that learn patterns from data and make predictions.",
+            "recommendation": "Learn supervised and unsupervised learning, regression, classification, decision trees, random forests, model evaluation and scikit-learn."
+        },
+        {
+            "skill": "Data Analysis",
+            "content": "Data analysis involves cleaning, processing and interpreting data to identify useful patterns and insights.",
+            "recommendation": "Learn Python Pandas, NumPy, data cleaning, exploratory data analysis, statistical concepts and data visualization."
+        },
+        {
+            "skill": "Communication",
+            "content": "Communication is the ability to explain ideas clearly and exchange information effectively with others.",
+            "recommendation": "Practice explaining technical concepts, giving presentations, participating in group discussions and writing clear professional emails."
+        },
+        {
+            "skill": "Power BI",
+            "content": "Power BI is a business intelligence tool used to create interactive dashboards and reports.",
+            "recommendation": "Learn Power Query, data modeling, relationships, DAX measures, charts, slicers and interactive dashboard creation."
+        },
+        {
+            "skill": "Excel",
+            "content": "Microsoft Excel is used for organizing data, performing calculations and creating reports.",
+            "recommendation": "Learn formulas, IF, SUMIF, COUNTIF, lookup functions, sorting, filtering, pivot tables and charts."
+        }
+    ]
+}
