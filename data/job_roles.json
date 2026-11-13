@@ -1,0 +1,38 @@
+{
+    "roles": [
+        {
+            "role_name": "Python Developer",
+            "description": "Develop Python applications, write clean code, work with APIs, databases, and solve programming problems.",
+            "required_skills": [
+                "Python",
+                "SQL",
+                "Problem Solving",
+                "Communication",
+                "Git"
+            ]
+        },
+        {
+            "role_name": "Data Analyst",
+            "description": "Analyze datasets, clean data, create reports and dashboards, identify trends, and communicate business insights.",
+            "required_skills": [
+                "Python",
+                "SQL",
+                "Data Analysis",
+                "Communication",
+                "Excel",
+                "Power BI"
+            ]
+        },
+        {
+            "role_name": "Machine Learning Engineer",
+            "description": "Build machine learning models, process data, develop predictive systems, use Python libraries, and evaluate model performance.",
+            "required_skills": [
+                "Python",
+                "Machine Learning",
+                "Data Analysis",
+                "SQL",
+                "Problem Solving"
+            ]
+        }
+    ]
+}
