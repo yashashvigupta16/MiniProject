@@ -438,7 +438,9 @@ const App = () => {
       }
     } catch (error) {
       setView("work");
-      setMsg("Analysis error: Backend server check karo.");
+      setErr(error.message === "Failed to fetch"
+        ? "Could not connect to the backend server. Make sure python app.py is running."
+        : ("Analysis failed: " + (error.message || "Unknown error")));
     }
   };
 
