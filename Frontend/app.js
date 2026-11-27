@@ -151,7 +151,8 @@ const SL = ["Too short", "Weak", "Fair", "Good", "Strong"];
 
 const GoogleSignIn = ({ onIn }) => {
   const box = useRef(), [cid, setCid] = useState(null), [err, setErr] = useState(""), [busy, setBusy] = useState(false);
-  useEffect(() => { fetch(API + "/api/config").then(r => r.json()).then(d => setCid(d.googleClientId || "")).catch(() => setCid("")); }, []);
+  const [why, setWhy] = useState("Google sign-in is not set up yet. Add GOOGLE_CLIENT_ID to Backend/.env and restart the server.");
+  useEffect(() => { fetch(API + "/api/config").then(r => { if (!r.ok) throw new Error("old"); return r.json(); }).then(d => setCid(d.googleClientId || "")).catch(() => { setWhy("This server is running older code. Stop it with Ctrl + C and start it again with .\run."); setCid(""); }); }, []);
   useEffect(() => {
     if (!cid) return;
     let stop = false;
@@ -173,7 +174,7 @@ const GoogleSignIn = ({ onIn }) => {
     return () => { stop = true; };
   }, [cid]);
   return html`<div class="mt-5">
-    ${cid ? html`<div ref=${box} class="w-full min-h-[44px] flex justify-center"/>` : html`<${Btn} c="w-full py-3" disabled=${cid === null} onClick=${() => setErr("Google sign-in is not set up yet. Add GOOGLE_CLIENT_ID to Backend/.env and restart the server.")}><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Continue with Google<//>`}
+    ${cid ? html`<div ref=${box} class="w-full min-h-[44px] flex justify-center"/>` : html`<${Btn} c="w-full py-3" disabled=${cid === null} onClick=${() => setErr(why)}><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Continue with Google<//>`}
     ${busy && html`<p class="flex items-center justify-center gap-2 text-xs text-mu mt-2"><${Spinner} s=${14}/>Signing you in</p>`}
     ${err && html`<p role="alert" class="flex items-start gap-1.5 text-[12.5px] text-rose-600 mt-2 fade"><${Ic} n="alert" s=${13} c="mt-0.5"/>${err}</p>`}</div>`;
 };
