@@ -20,7 +20,10 @@ for p in (BACKEND_DIR, PROJECT_ROOT):
     if p not in sys.path:
         sys.path.insert(0, p)
 
-from db import resumes_col, analyses_col, feedback_col
+from google.oauth2 import id_token as google_id_token
+from google.auth.transport import requests as google_requests
+
+from db import resumes_col, analyses_col, feedback_col, users_col
 from gemini_helper import parse_resume_with_gemini, analyze_roles_with_gemini
 
 # ml_engine lives in the project root
@@ -276,6 +279,56 @@ def analyze():
     except Exception as e:
         print("ANALYZE ERROR:", e)
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/config", methods=["GET"])
+def config():
+    """Public settings the page needs. A Google Client ID is not a secret."""
+    return jsonify({"googleClientId": os.getenv("GOOGLE_CLIENT_ID", "").strip()})
+
+
+@app.route("/api/auth/google", methods=["POST"])
+def auth_google():
+    """
+    Sign in with Google.
+
+    Expects: { credential: "<ID token from Google Identity Services>" }
+    Returns: { name, email, picture } after Google's signature, audience
+             and expiry checks pass.
+    """
+    client_id = os.getenv("GOOGLE_CLIENT_ID", "").strip()
+    if not client_id:
+        return jsonify({"error": "Google sign-in is not set up on this server."}), 503
+
+    credential = (request.json or {}).get("credential")
+    if not credential:
+        return jsonify({"error": "Missing Google credential."}), 400
+
+    try:
+        info = google_id_token.verify_oauth2_token(
+            credential, google_requests.Request(), client_id)
+    except ValueError as err:
+        print("GOOGLE SIGN-IN REJECTED:", err)
+        return jsonify({"error": "Google sign-in could not be verified. Please try again."}), 401
+
+    if not info.get("email_verified"):
+        return jsonify({"error": "Your Google email address is not verified."}), 401
+
+    user = {
+        "name": info.get("name") or info["email"].split("@")[0],
+        "email": info["email"],
+        "picture": info.get("picture", ""),
+    }
+    try:
+        users_col.update_one(
+            {"google_id": info["sub"]},
+            {"$set": {**user, "last_login": datetime.now(timezone.utc)}},
+            upsert=True,
+        )
+    except Exception as db_err:
+        print("DB WARNING:", db_err)
+
+    return jsonify(user)
 
 
 @app.route("/api/feedback", methods=["POST"])

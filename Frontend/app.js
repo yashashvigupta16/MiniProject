@@ -149,6 +149,35 @@ const validate = (m, f) => {
 const strength = p => { let s = 0; if (p.length >= 8) s++; if (p.length >= 12) s++; if (/[a-z]/.test(p) && /[A-Z]/.test(p)) s++; if (/\d/.test(p)) s++; if (/[^\w\s]/.test(p)) s++; return Math.min(s, 4); };
 const SL = ["Too short", "Weak", "Fair", "Good", "Strong"];
 
+const GoogleSignIn = ({ onIn }) => {
+  const box = useRef(), [cid, setCid] = useState(null), [err, setErr] = useState(""), [busy, setBusy] = useState(false);
+  useEffect(() => { fetch(API + "/api/config").then(r => r.json()).then(d => setCid(d.googleClientId || "")).catch(() => setCid("")); }, []);
+  useEffect(() => {
+    if (!cid) return;
+    let stop = false;
+    const draw = () => {
+      if (stop || !box.current) return;
+      if (!(window.google && google.accounts && google.accounts.id)) { setTimeout(draw, 200); return; }
+      google.accounts.id.initialize({ client_id: cid, callback: async ({ credential }) => {
+        setErr(""); setBusy(true);
+        try {
+          const r = await fetch(API + "/api/auth/google", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ credential }) });
+          const d = await r.json().catch(() => ({}));
+          if (!r.ok) throw new Error(d.error || "Google sign-in failed. Please try again.");
+          onIn({ ...d, google: true });
+        } catch (e) { setBusy(false); setErr(e.message === "Failed to fetch" ? "Could not reach the AlgoMind server. Make sure it is running." : e.message); }
+      } });
+      google.accounts.id.renderButton(box.current, { theme: "outline", size: "large", text: "continue_with", shape: "rectangular", logo_alignment: "center", width: Math.min(400, box.current.offsetWidth || 360) });
+    };
+    draw();
+    return () => { stop = true; };
+  }, [cid]);
+  return html`<div class="mt-5">
+    ${cid ? html`<div ref=${box} class="w-full min-h-[44px] flex justify-center"/>` : html`<${Btn} c="w-full py-3" disabled=${cid === null} onClick=${() => setErr("Google sign-in is not set up yet. Add GOOGLE_CLIENT_ID to Backend/.env and restart the server.")}><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Continue with Google<//>`}
+    ${busy && html`<p class="flex items-center justify-center gap-2 text-xs text-mu mt-2"><${Spinner} s=${14}/>Signing you in</p>`}
+    ${err && html`<p role="alert" class="flex items-start gap-1.5 text-[12.5px] text-rose-600 mt-2 fade"><${Ic} n="alert" s=${13} c="mt-0.5"/>${err}</p>`}</div>`;
+};
+
 const Auth = ({ onIn, mode, onBack }) => {
   const [m, setM] = useState(mode || "in"), [f, setF] = useState({ name: "", email: "", pw: "" }), [t, setT] = useState({}), [show, setShow] = useState(false), [busy, setBusy] = useState(false), [shake, setShake] = useState(0);
   const er = validate(m, f), set = k => ev => setF(s => ({ ...s, [k]: ev.target.value })), blur = k => () => setT(s => ({ ...s, [k]: true })), vis = k => t[k] && er[k];
@@ -171,7 +200,7 @@ const Auth = ({ onIn, mode, onBack }) => {
       <div key=${shake} class=${cx("glass rounded-[24px] w-full max-w-[440px] p-7 sm:p-9", shake && "shake")}><div class="lg:hidden mb-6"><${Brand}/></div>
         <h2 class="text-2xl font-extrabold tracking-tight">${m === "in" ? "Welcome back" : "Create your account"}</h2><p class="text-sm text-mu mt-1.5">${m === "in" ? "Sign in to see your role rankings and roadmaps." : "Start ranking roles against your resume."}</p>
         <div class="grid grid-cols-2 mt-6 bg-lav-100 rounded-xl p-1 text-sm font-semibold" role="tablist">${[["in", "Sign in"], ["up", "Create account"]].map(([k, l]) => html`<button key=${k} role="tab" aria-selected=${m === k} onClick=${() => sw(k)} class=${cx("py-2 rounded-[9px] transition-all", m === k ? "bg-white text-ink shadow-card" : "text-mu hover:text-ink")}>${l}</button>`)}</div>
-        <div class="grid grid-cols-2 gap-3 mt-5"><${Btn} onClick=${demo}>Google<//><${Btn} onClick=${demo}>GitHub<//></div>
+        <${GoogleSignIn} onIn=${onIn}/>
         <div class="flex items-center gap-3 my-5 text-xs text-mu"><span class="flex-1 h-px bg-bd"/>or continue with email<span class="flex-1 h-px bg-bd"/></div>
         <form onSubmit=${go} noValidate class="grid gap-4">
           ${m === "up" && html`<${Field} id="f-name" label="Full name" icon="user" placeholder="Aarav Mehta" autoComplete="name" value=${f.name} onChange=${set("name")} onBlur=${blur("name")} error=${vis("name")} ok=${t.name && !er.name}/>`}
@@ -181,7 +210,7 @@ const Auth = ({ onIn, mode, onBack }) => {
             ${m === "up" && f.pw && html`<div class="mt-2.5 fade"><div class="grid grid-cols-4 gap-1.5">${[0, 1, 2, 3].map(i => html`<span key=${i} class="h-1.5 rounded-full transition-colors" style=${{ background: i < st ? (st < 2 ? "#E5484D" : st < 3 ? "#E8A317" : "#6C4BFF") : "#EAE7FB" }}/>`)}</div><p class="text-xs text-mu mt-1.5">Password strength: <b class="text-ink">${SL[st]}</b></p></div>`}</div>
           <${Btn} v="p" type="submit" c="w-full mt-1 py-3" disabled=${busy}>${busy ? html`<${Spinner}/>` : null}${busy ? "Please wait" : m === "in" ? "Sign in to dashboard" : "Create account"}<//></form>
         <button onClick=${demo} class="link mt-5 w-full text-sm text-center">Explore with the demo account</button>
-        <p class="text-xs text-mu mt-4 text-center">Sign-in is a prototype: your password is not checked or sent.</p></div></div></div>`;
+        <p class="text-xs text-mu mt-4 text-center">Google sign-in is real. Email sign-in is still a prototype: your password is not checked or sent.</p></div></div></div>`;
 };
 
 /* ============ WORKSPACE ============ */
@@ -359,11 +388,13 @@ async function saveFile(name, data) {
 }
 
 const App = () => {
-  const [user, setUser] = useState(null), [gate, setGate] = useState("landing"), [view, setView] = useState("work"), [prof, setProf] = useState(null), [picked, setPicked] = useState(["ml", "da", "ds", "sd"]),
+  const [user, setUser] = useState(() => stored("algomind-user", null)), [gate, setGate] = useState("landing"), [view, setView] = useState("work"), [prof, setProf] = useState(null), [picked, setPicked] = useState(["ml", "da", "ds", "sd"]),
     [cust, setCust] = useState([]), [res, setRes] = useState(null), [act, setAct] = useState(null), [tab, setTab] = useState("ov"), [step, setStep] = useState(0),
     [msg, setMsg] = useState(""), [menu, setMenu] = useState(false), [drawer, setDrawer] = useState(false), [jd, setJd] = useState(""), [err, setErr] = useState(""), [over, setOver] = useState(false),
     [file, setFile] = useState(null), [hist, setHist] = useState(() => stored("algomind-hist", []).filter(h => h.prof)), [done, setDone] = useState(() => stored("algomind-done", {}));
   const fileRef = useRef(), tok = useRef(0);
+  useEffect(() => { try { localStorage.setItem("algomind-user", JSON.stringify(user)); } catch (_) {} }, [user]);
+  useEffect(() => { if (user) restore(); }, []);
   useEffect(() => { try { localStorage.setItem("algomind-hist", JSON.stringify(hist)); localStorage.setItem("algomind-done", JSON.stringify(done)); } catch (_) {} }, [hist, done]);
   useEffect(() => { if (!msg) return; const t = setTimeout(() => setMsg(""), 2600); return () => clearTimeout(t); }, [msg]);
   const rank = (ids, c) => [...ROLES.filter(r => ids.includes(r.id)), ...c].sort((a, b) => b.score - a.score);
@@ -474,8 +505,9 @@ const App = () => {
   const toggle = id => setPicked(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
   const tog = k => setDone(d => ({ ...d, [k]: !d[k] }));
   const total = picked.length + cust.length, r = res && (res.find(x => x.id === act) || res[0]);
-  const login = u => { setUser(u); setView("work"); const last = hist.find(h => h.prof); if (last) { setProf(last.prof); setRes(last.res); setAct(last.res[0].id); } scrollTo(0, 0); };
-  const logout = () => { setMenu(false); setUser(null); setGate("landing"); setView("work"); setRes(null); setProf(null); setFile(null); setHist([]); setDone({}); setErr(""); scrollTo(0, 0); };
+  const restore = () => { const last = hist.find(h => h.prof); if (last) { setProf(last.prof); setRes(last.res); setAct(last.res[0].id); } };
+  const login = u => { setUser(u); setView("work"); restore(); scrollTo(0, 0); };
+  const logout = () => { if (user.google && window.google && google.accounts) google.accounts.id.disableAutoSelect(); setMenu(false); setUser(null); setGate("landing"); setView("work"); setRes(null); setProf(null); setFile(null); setHist([]); setDone({}); setErr(""); scrollTo(0, 0); };
   if (!user) return html`<${React.Fragment}><${Defs}/>${gate === "landing" ? html`<${Landing} onStart=${m => { setGate(m); scrollTo(0, 0); }} onDemo=${() => login({ name: "Aarav Mehta", email: "demo@algomind.app" })}/>` : html`<${Auth} key=${gate} mode=${gate} onIn=${login} onBack=${() => { setGate("landing"); scrollTo(0, 0); }}/>`}<//>`;
   const ini = user.name.split(" ").filter(Boolean).map(w => w[0]).slice(0, 2).join("").toUpperCase() || "U";
   const A = { prof, file, err, onFile, removeFile, fileRef, picked, toggle, cust, setCust, drawer, setDrawer, jd, setJd, addJd, run, total, setSec, over, setOver, useSampleResume, res, r, act, setAct, tab, setTab, hist, openHist, done, tog, setView, download };
@@ -484,7 +516,7 @@ const App = () => {
     <button onClick=${() => setView(res && view === "dash" ? "dash" : "work")} aria-label="AlgoMind home"><${Brand}/></button><span class="hidden lg:inline text-[11px] font-semibold border border-vio-m bg-vio-l text-vio-d px-2.5 py-1 rounded-full">Semantic Engine v1.0</span>
     <nav class="order-last w-full md:order-none md:w-auto md:ml-4 flex gap-1 text-sm font-semibold">${[["work", "Workspace", "grid"], ["dash", "Results", "bars"]].map(([k, l, ic]) => html`<button key=${k} disabled=${k === "dash" && !(res && prof)} onClick=${() => setView(k)} class=${cx("flex items-center gap-2 px-3.5 py-2 rounded-xl transition-colors disabled:opacity-40", (view === k || (view === "run" && k === "work")) ? "bg-vio-l text-vio-d" : "text-mu hover:text-ink hover:bg-lav-100")}><${Ic} n=${ic} s=${16}/>${l}</button>`)}</nav>
     <div class="ml-auto flex items-center gap-2.5"><${Btn} c="btn-sm" onClick=${sample}><${Ic} n="zap" s=${15} c="text-vio"/><span class="hidden sm:inline">Load sample analysis</span><span class="sm:hidden">Sample</span><//>
-      <div class="relative"><button onClick=${() => setMenu(!menu)} aria-label="Account menu" aria-expanded=${menu} class="w-10 h-10 rounded-full fill-brand text-white text-sm font-bold shadow-glow ring-2 ring-white">${ini}</button>
+      <div class="relative"><button onClick=${() => setMenu(!menu)} aria-label="Account menu" aria-expanded=${menu} class="w-10 h-10 rounded-full fill-brand text-white text-sm font-bold shadow-glow ring-2 ring-white">${user.picture ? html`<img src=${user.picture} alt="" referrerpolicy="no-referrer" class="w-full h-full rounded-full object-cover"/>` : ini}</button>
         ${menu && html`<div class="fixed inset-0 z-40" onClick=${() => setMenu(false)}/><div class="absolute right-0 mt-2.5 w-64 z-50 surface p-1.5 text-sm fade !shadow-lift"><div class="px-3 py-2.5 border-b border-bd mb-1"><b>${user.name}</b><div class="text-xs text-mu truncate">${user.email}</div></div>
           ${["My Profile", "My Resumes", "Saved Roles", "Analysis History", "Settings"].map(t => html`<button key=${t} onClick=${() => { setMenu(false); setMsg(t + " is a placeholder in this prototype."); }} class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-lav-50">${t}</button>`)}
           <button onClick=${logout} class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-rose-50 flex items-center gap-2 text-rose-700 border-t border-bd mt-1"><${Ic} n="out"/>Log out</button></div>`}</div></div></div></header>

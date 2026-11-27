@@ -222,7 +222,10 @@ Create `Backend/.env`:
 ```env
 MONGO_URI=your_mongodb_connection_string
 GEMINI_API_KEY=your_gemini_api_key
+GOOGLE_CLIENT_ID=your_google_oauth_client_id   # optional, enables Sign in with Google
 ```
+
+For **Sign in with Google**, create an OAuth client ID (type *Web application*) in the [Google Cloud Console](https://console.cloud.google.com/apis/credentials) and add `http://localhost:5000` and `http://localhost` as *Authorized JavaScript origins*.
 
 ### 4️⃣ Launch 🎉
 
@@ -257,6 +260,8 @@ Base URL: `http://127.0.0.1:5000`
 | 🟢 `GET` | `/api/health` | Server status | none |
 | 🟣 `POST` | `/api/upload` | Extract a profile and run ML ranking | form-data `resume` (PDF / DOCX) |
 | 🟣 `POST` | `/api/analyze` | Deep role analysis with Gemini | `{ "profile": {}, "roles": [] }` |
+| 🟢 `GET` | `/api/config` | Public settings for the page (Google Client ID) | none |
+| 🟣 `POST` | `/api/auth/google` | Verifies a Google sign-in and returns the user | `{ "credential": "<Google ID token>" }` |
 | 🟣 `POST` | `/api/feedback` | Saves the one-tap "Does this feel right?" answer | `{ "top_role": "...", "agree": true }` |
 | 🟣 `POST` | `/api/ml-rank` | ML ranking only, no Gemini call | `{ "resume_text": "..." }` |
 
@@ -371,7 +376,8 @@ This is an academic mini-project that runs locally.
 - [x] Multi-role analysis, skill gaps, roadmap, comparison and report
 - [x] Local semantic ranking with FAISS retrieval
 - [x] Show the ML engine ranking inside the dashboard
-- [ ] Real authentication (sign-in is currently a prototype)
+- [x] Sign in with Google (verified on the server)
+- [ ] Email and password accounts (currently a prototype)
 - [x] Analysis history and roadmap progress saved in the browser
 - [x] One-tap feedback on the top role, stored for evaluation
 - [ ] Larger role and knowledge datasets
