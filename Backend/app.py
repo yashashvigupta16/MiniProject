@@ -1,6 +1,8 @@
 import os
 import sys
-from flask import Flask, request, jsonify
+import zipfile
+from xml.etree import ElementTree
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import PyPDF2
@@ -24,6 +26,9 @@ from ml_engine.role_ranker import rank_roles
 # ── app setup ─────────────────────────────────────────────────────────────────
 app = Flask(__name__)
 CORS(app)
+app.config["MAX_CONTENT_LENGTH"] = 11 * 1024 * 1024  # 10 MB file + form overhead
+
+FRONTEND_DIR = os.path.join(PROJECT_ROOT, "Frontend")
 
 UPLOAD_FOLDER = os.path.join(BACKEND_DIR, "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -34,11 +39,13 @@ DATA_DIR = os.path.join(PROJECT_ROOT, "data")
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 def _extract_text(filepath: str, filename: str) -> str:
-    """Extract plain text from a PDF or text file.
+    """Extract plain text from a PDF, DOCX or text file.
 
     Tries pymupdf (ml_engine.pdf_parser) first for PDFs; falls back to
     PyPDF2 so the route still works even if pymupdf is not installed.
     """
+    if filename.lower().endswith(".docx"):
+        return _extract_docx(filepath)
     if filename.lower().endswith(".pdf"):
         try:
             text = extract_text_from_pdf(filepath)
@@ -53,6 +60,25 @@ def _extract_text(filepath: str, filename: str) -> str:
     else:
         with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
             return f.read()
+
+
+def _extract_docx(filepath: str) -> str:
+    """A DOCX is a zip of XML; read the paragraphs from the main document."""
+    ns = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+    with zipfile.ZipFile(filepath) as z:
+        root = ElementTree.fromstring(z.read("word/document.xml"))
+    return "\n".join(
+        "".join(t.text or "" for t in p.iter(ns + "t"))
+        for p in root.iter(ns + "p")
+    )
+
+
+def _save(collection, document: dict) -> None:
+    """Persist to MongoDB; a database outage must not break the dashboard."""
+    try:
+        collection.insert_one(document)
+    except Exception as db_err:
+        print("DB WARNING:", db_err)
 
 
 def _ml_rank(resume_text: str) -> list:
@@ -70,6 +96,16 @@ def _ml_rank(resume_text: str) -> list:
 
 
 # ── routes ────────────────────────────────────────────────────────────────────
+
+@app.route("/", methods=["GET"])
+def index():
+    return send_from_directory(FRONTEND_DIR, "index.html")
+
+
+@app.route("/<path:asset>", methods=["GET"])
+def frontend_asset(asset):
+    return send_from_directory(FRONTEND_DIR, asset)
+
 
 @app.route("/api/health", methods=["GET"])
 def health():
@@ -124,7 +160,7 @@ def upload_resume():
             extracted_profile["ml_ranking_error"] = ml_error
 
         # 3. Persist to MongoDB
-        resumes_col.insert_one({
+        _save(resumes_col, {
             "filename": filename,
             "profile": extracted_profile,
             "ml_ranking": ml_ranking,
@@ -151,9 +187,12 @@ def analyze():
         profile = data.get("profile", {})
         roles = data.get("roles", [])
 
+        if not profile or not roles:
+            return jsonify({"error": "A profile and at least one role are required."}), 400
+
         results = analyze_roles_with_gemini(profile, roles)
 
-        analyses_col.insert_one({
+        _save(analyses_col, {
             "candidate": profile.get("name"),
             "top_role": results[0]["title"] if results else "None",
             "results": results,

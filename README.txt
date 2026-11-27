@@ -1,6 +1,9 @@
 AlgoMind frontend (React 18 + HTM + Tailwind via CDN, no build step)
 
-Open index.html in Chrome. Needs internet for CDN scripts and fonts.
+Run (from the project folder, PowerShell):
+  Backend\venv\Scripts\python.exe Backend\app.py
+then open http://127.0.0.1:5000  (needs Backend\.env with MONGO_URI and
+GEMINI_API_KEY, and internet for CDN scripts and fonts).
 
 index.html          page shell (loads CDN libraries and the files below)
 styles.css          design tokens, surfaces, buttons, inputs, 3D hero scene
@@ -12,5 +15,5 @@ Flow: Landing -> Sign in / Create account (or demo) -> Workspace (upload, edit
 profile, pick roles or paste a job description) -> simulated analysis -> Results
 (KPIs, charts, job matches, skill gaps, roadmap, compare, recent analyses, report download).
 
-All analysis values are demonstration data from data.js. No backend is called.
-To connect a real engine, replace the ROLES lookup inside run()/show() in app.js.
+Upload and analysis call the Flask backend (/api/upload, /api/analyze).
+data.js is only used for the sample/demo screens.

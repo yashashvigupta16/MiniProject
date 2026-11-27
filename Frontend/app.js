@@ -1,4 +1,6 @@
 const { useState, useEffect, useRef } = React;
+// Same origin when Flask serves this page; otherwise talk to the local backend.
+const API = location.port === "5000" ? "" : "http://127.0.0.1:5000";
 const html = htm.bind(React.createElement);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const cx = (...a) => a.filter(Boolean).join(" ");
@@ -110,7 +112,7 @@ const Landing = ({ onStart, onDemo }) => {
         <p class="mt-6 text-[17px] leading-relaxed text-white/70 max-w-lg">AlgoMind compares the meaning of your projects and skills with each job description, ranks every role, and shows exactly which skills to build next.</p>
         <div class="flex flex-wrap gap-3 mt-9"><${Btn} v="p" c="btn-lg" onClick=${() => onStart("up")}>Create free account<${Ic} n="arrow" s=${18}/><//><${Btn} v="w" c="btn-lg" onClick=${onDemo}>Try the demo<//></div>
         <div class="mt-9 flex flex-wrap gap-x-7 gap-y-3 text-[13px] text-white/60">${[["file", "PDF and DOCX resumes"], ["layers", "Four alignment dimensions"], ["route", "Roadmap for every role"]].map(([ic, t]) => html`<span key=${t} class="inline-flex items-center gap-2"><${Ic} n=${ic} s=${15} c="text-vio-m"/>${t}</span>`)}</div>
-        <p class="mt-6 text-xs text-white/40 max-w-md">Frontend prototype: analysis values shown here are demonstration data, and nothing you enter is sent anywhere.</p></div>
+        <p class="mt-6 text-xs text-white/40 max-w-md">Preview values on this page are sample data. Uploaded resumes are processed by the AlgoMind backend and Google Gemini.</p></div>
       <${HeroScene}/></div></section>
 
   <section id="features" class="app-bg py-24"><div class="max-w-6xl mx-auto px-5">
@@ -123,14 +125,14 @@ const Landing = ({ onStart, onDemo }) => {
     <ol class="grid md:grid-cols-4 gap-x-6 gap-y-10 mt-14 relative">${HOW.map(([t, d, ic], i) => html`<li key=${t} class="relative"><div class="flex items-center gap-3"><span class="w-12 h-12 rounded-2xl fill-brand text-white grid place-items-center shadow-glow relative z-10"><${Ic} n=${ic} s=${21}/></span>${i < 3 && html`<span class="hidden md:block flex-1 h-px bg-gradient-to-r from-vio-m to-transparent"/>`}</div><div class="text-xs font-bold text-vio mt-5">Step ${i + 1}</div><h3 class="font-bold text-lg mt-1">${t}</h3><p class="text-mu text-sm leading-relaxed mt-1.5">${d}</p></li>`)}</ol></div></section>
 
   <section id="pipeline" class="app-bg py-24"><div class="max-w-6xl mx-auto px-5 grid lg:grid-cols-[.9fr_1.1fr] gap-12 items-center">
-    <div><h2 class="text-3xl md:text-[2.6rem] font-extrabold tracking-tight leading-[1.1]">Nine stages, visible while they run</h2><p class="mt-4 text-mu text-[17px] leading-relaxed max-w-md">You see each stage of the analysis as it completes, so the result never arrives as a black box.</p><p class="mt-4 text-xs text-mu max-w-md">This prototype simulates the stages and returns sample results. Connect your own engine to the same screens to get real ones.</p></div>
+    <div><h2 class="text-3xl md:text-[2.6rem] font-extrabold tracking-tight leading-[1.1]">Nine stages, visible while they run</h2><p class="mt-4 text-mu text-[17px] leading-relaxed max-w-md">You see each stage of the analysis as it completes, so the result never arrives as a black box.</p><p class="mt-4 text-xs text-mu max-w-md">The progress list is indicative; results come from the AlgoMind backend once the analysis finishes.</p></div>
     <div class="surface p-6 md:p-7"><ul class="grid sm:grid-cols-2 gap-x-6 gap-y-3.5">${STEPS.map((s, i) => html`<li key=${s} class="flex items-center gap-3 text-sm font-medium"><span class="w-6 h-6 rounded-full bg-vio-l text-vio grid place-items-center text-[11px] font-bold shrink-0">${i + 1}</span>${s}</li>`)}</ul></div></div></section>
 
   <section class="navy-bg text-white overflow-hidden"><div class="grid-lines"/><div class="relative max-w-3xl mx-auto px-5 py-24 text-center"><h2 class="font-serif text-[clamp(2.2rem,5vw,3.6rem)] leading-[1.05] tracking-[-0.02em]">Find out where your resume stands.</h2><p class="mt-4 text-white/65 text-[17px]">Start with the sample resume, or upload your own.</p><div class="flex flex-wrap justify-center gap-3 mt-8"><${Btn} v="p" c="btn-lg" onClick=${() => onStart("up")}>Create free account<//><${Btn} v="w" c="btn-lg" onClick=${onDemo}>Try the demo<//></div></div></section>
 
   <footer class="bg-navy-950 text-white/60"><div class="max-w-6xl mx-auto px-5 py-12 grid md:grid-cols-[1.2fr_1fr] gap-8 items-start"><div><${Brand} dark/><p class="text-sm mt-4 max-w-sm leading-relaxed">Autonomous resume-to-job matching that explains every score and turns gaps into a plan.</p></div>
     <div class="flex flex-wrap gap-x-10 gap-y-3 text-sm md:justify-end">${[["features", "Features"], ["how", "How it works"], ["pipeline", "Analysis stages"]].map(([id, l]) => html`<button key=${id} onClick=${() => goTo(id)} class="hover:text-white transition-colors">${l}</button>`)}<button onClick=${() => onStart("in")} class="hover:text-white transition-colors">Sign in</button></div></div>
-    <div class="border-t border-white/10"><div class="max-w-6xl mx-auto px-5 py-5 text-xs flex flex-wrap justify-between gap-2"><span>${"© " + new Date().getFullYear() + " AlgoMind"}</span><span>Frontend prototype. No data is sent anywhere.</span></div></div></footer></div>`;
+    <div class="border-t border-white/10"><div class="max-w-6xl mx-auto px-5 py-5 text-xs flex flex-wrap justify-between gap-2"><span>${"© " + new Date().getFullYear() + " AlgoMind"}</span><span>Resumes are processed by the AlgoMind backend and Google Gemini.</span></div></div></footer></div>`;
 };
 
 /* ============ AUTH ============ */
@@ -179,7 +181,7 @@ const Auth = ({ onIn, mode, onBack }) => {
             ${m === "up" && f.pw && html`<div class="mt-2.5 fade"><div class="grid grid-cols-4 gap-1.5">${[0, 1, 2, 3].map(i => html`<span key=${i} class="h-1.5 rounded-full transition-colors" style=${{ background: i < st ? (st < 2 ? "#E5484D" : st < 3 ? "#E8A317" : "#6C4BFF") : "#EAE7FB" }}/>`)}</div><p class="text-xs text-mu mt-1.5">Password strength: <b class="text-ink">${SL[st]}</b></p></div>`}</div>
           <${Btn} v="p" type="submit" c="w-full mt-1 py-3" disabled=${busy}>${busy ? html`<${Spinner}/>` : null}${busy ? "Please wait" : m === "in" ? "Sign in to dashboard" : "Create account"}<//></form>
         <button onClick=${demo} class="link mt-5 w-full text-sm text-center">Explore with the demo account</button>
-        <p class="text-xs text-mu mt-4 text-center">Frontend prototype. No data is sent anywhere.</p></div></div></div>`;
+        <p class="text-xs text-mu mt-4 text-center">Sign-in is a prototype: your password is not checked or sent.</p></div></div></div>`;
 };
 
 /* ============ WORKSPACE ============ */
@@ -207,12 +209,12 @@ const Workspace = ({ a }) => {
       : html`<div class=${cx("inset p-4 transition-shadow", over && "ring-2 ring-vio")}>
               <div class="flex items-center gap-3.5"><span class=${cx("w-12 h-12 rounded-xl grid place-items-center shrink-0 font-bold text-[11px]", ext === "PDF" ? "bg-vio-l text-vio" : "bg-blu-l text-blu-d")}>${file ? ext : html`<${Ic} n="file" s=${20}/>`}</span>
                 <div class="min-w-0 flex-1"><div class="font-semibold text-sm truncate">${file ? file.name : "Sample resume"}</div>
-                  <div class="text-xs text-mu mt-0.5">${file ? fmtSize(file.size) + " · " : ""}${file && file.status === "reading" ? "Reading file" : file ? "Ready" : "Built-in example profile"}</div></div>
+                  <div class="text-xs text-mu mt-0.5">${file ? fmtSize(file.size) + " · " : ""}${file && file.status === "reading" ? "Analyzing file" : file ? "Ready" : "Built-in example profile"}</div></div>
                 ${file && file.status === "reading" ? html`<${Spinner} s=${18}/>` : html`<span class="inline-flex items-center gap-1.5 text-xs font-semibold text-ok bg-ok-l rounded-full px-2.5 py-1"><${Ic} n="okc" s=${14}/>Ready</span>`}</div>
-              ${file && file.status === "reading" && html`<div class="mt-3.5"><${Bar} v=${file.progress} h="h-1.5"/><div class="flex justify-between text-xs text-mu mt-1.5 tnum"><span>Reading file on your device</span><span>${file.progress}%</span></div></div>`}</div>`}</div>
+              ${file && file.status === "reading" && html`<div class="mt-3.5"><${Bar} v=${file.progress} h="h-1.5"/><div class="flex justify-between text-xs text-mu mt-1.5 tnum"><span>Extracting your resume, this can take a minute</span><span>${file.progress}%</span></div></div>`}</div>`}</div>
         <input ref=${fileRef} type="file" hidden accept=".pdf,.docx" onChange=${e => { onFile(e.target.files[0]); e.target.value = ""; }}/>
         <div class="min-h-[1.4em] mt-2" aria-live="polite">${err && html`<div role="alert" class="flex items-start gap-2 text-[13px] text-rose-700 bg-rose-50 border border-rose-200 rounded-xl px-3.5 py-2.5 fade"><${Ic} n="alert" s=${15} c="mt-0.5"/>${err}</div>`}</div>
-        ${prof ? html`<div class="mt-3 fade"><div class="text-[13px] text-mu flex items-start gap-2 bg-lav-50 border border-bd rounded-xl px-3.5 py-2.5"><${Ic} n="info" s=${15} c="text-vio mt-0.5"/><span>${prof.src ? "Preview for " + prof.src + " (sample extraction). " : "Sample resume loaded. "}Edit anything that looks wrong.</span></div><div class="mt-2">${SEC.map(([k, l]) => html`<${Section} key=${k} k=${k} l=${l} items=${prof[k]} set=${setSec}/>`)}</div></div>`
+        ${prof ? html`<div class="mt-3 fade"><div class="text-[13px] text-mu flex items-start gap-2 bg-lav-50 border border-bd rounded-xl px-3.5 py-2.5"><${Ic} n="info" s=${15} c="text-vio mt-0.5"/><span>${prof.src ? "Extracted from " + prof.src + ". " : "Sample resume loaded. "}Edit anything that looks wrong.</span></div><div class="mt-2">${SEC.map(([k, l]) => html`<${Section} key=${k} k=${k} l=${l} items=${prof[k]} set=${setSec}/>`)}</div></div>`
       : html`<div class="border border-dashed border-bd rounded-2xl p-5 text-center text-sm text-mu mt-1">Your parsed skills, education, projects, certifications, experience, internships and achievements will appear here.<div class="mt-3"><${Btn} onClick=${useSampleResume}>Use sample resume<//></div></div>`}<//>
       <${Card} c="p-6 md:p-7"><h2 class="font-bold text-lg">Target roles</h2><p class="text-sm text-mu mt-0.5 mb-5">Select roles to rank, or paste your own job description.</p>
         <div class="grid gap-2.5">${ROLES.map(x => {
@@ -233,7 +235,7 @@ const Running = ({ step }) => {
     <div class="mt-6"><${Bar} v=${pct}/></div>
     <ul class="grid gap-3 mt-7">${STEPS.map((s, i) => html`<li key=${s} class=${cx("flex items-center gap-3 text-sm transition-colors", i <= step ? "text-ink font-medium" : "text-slate-400")}>
       <span class=${cx("w-6 h-6 rounded-full grid place-items-center", i < step ? "fill-brand text-white" : i === step ? "border-2 border-vio text-vio" : "border border-bd")}>${i < step ? html`<${Ic} n="check" s=${13} w=${2.8}/>` : i === step && step < STEPS.length ? html`<span class="w-1.5 h-1.5 rounded-full bg-vio pulse-dot"/>` : null}</span>${s}</li>`)}</ul>
-    <p class="text-xs text-mu mt-7 pt-5 border-t border-bd">Demonstration only: each stage is simulated with mock data.</p><//></main>`;
+    <p class="text-xs text-mu mt-7 pt-5 border-t border-bd">Gemini is comparing your profile with each role. This can take a minute.</p><//></main>`;
 };
 
 /* ============ RESULTS ============ */
@@ -262,7 +264,7 @@ const Gaps = ({ r }) => {
 };
 
 const Road = ({ r, done, tog }) => {
-  const keys = r.road.flatMap(([, , it], i) => it.map((_, j) => r.id + ":" + i + ":" + j)), n = keys.filter(k => done[k]).length, pct = Math.round(n / keys.length * 100);
+  const keys = r.road.flatMap(([, , it], i) => it.map((_, j) => r.id + ":" + i + ":" + j)), n = keys.filter(k => done[k]).length, pct = n ? Math.round(n / keys.length * 100) : 0;
   return html`<div class="fade grid gap-5"><div class="inset p-5 flex items-center gap-5"><${Ring} v=${pct} s=${64} w=${7}/><div class="flex-1 min-w-0"><h4 class="font-bold">Career improvement roadmap: ${r.title}</h4><p class="text-[13px] text-mu mt-0.5">A phased plan built from your skill gaps. Tick tasks as you finish them.</p><div class="text-xs text-mu mt-2 tnum">${n} of ${keys.length} tasks done</div></div></div>
   <ol class="relative grid gap-4 pl-0">${r.road.map(([w, t, it], i) => {
     const dn = it.filter((_, j) => done[r.id + ":" + i + ":" + j]).length;
@@ -297,7 +299,7 @@ const Results = ({ a }) => {
   return html`<main class="max-w-6xl mx-auto px-5 pb-16 fade">
     <div class="flex flex-wrap justify-between items-end gap-4 pt-9 pb-5"><div class="min-w-0"><div class="text-[13px] font-semibold text-vio">Analysis results</div><h1 class="text-2xl md:text-3xl font-extrabold tracking-tight mt-1">${prof.name}</h1><p class="text-sm text-mu mt-1 max-w-2xl">${prof.summary}</p></div>
       <div class="flex flex-wrap gap-2"><${Btn} onClick=${() => setView("work")}><${Ic} n="back"/>Modify resume or roles<//><${Btn} v="p" onClick=${download}><${Ic} n="download"/>Download report<//></div></div>
-    <div class="flex items-start gap-2.5 text-[13px] text-am bg-am-l border border-amber-200 rounded-xl px-4 py-2.5 mb-6"><${Ic} n="info" s=${16} c="mt-0.5"/><span>Demo data: scores and explanations are mock values for this frontend prototype.</span></div>
+    ${res[0].demo && html`<div class="flex items-start gap-2.5 text-[13px] text-am bg-am-l border border-amber-200 rounded-xl px-4 py-2.5 mb-6"><${Ic} n="info" s=${16} c="mt-0.5"/><span>Demo data: these are built-in sample results. Run an analysis from the workspace for real ones.</span></div>`}
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4"><${Kpi} grad ic="trend" l="Best match" v=${top.score + "%"} sub=${top.title}/><${Kpi} ic="target" l="Average alignment" v=${avg + "%"} sub=${"Across " + res.length + " role" + (res.length > 1 ? "s" : "")}/><${Kpi} ic="layers" l="Resume items" v=${total} sub=${prof.skills.length + " skills in " + SEC.length + " sections"}/><${Kpi} ic="alert" l="Skills to build" v=${uniq.length} sub="Unique gaps across all roles"/></div>
 
@@ -328,7 +330,7 @@ const Results = ({ a }) => {
 /* ============ REPORT & DOWNLOAD ============ */
 function reportHtml(res, prof) {
   const e = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>AlgoMind analysis report</title><style>body{font:14px/1.6 system-ui,sans-serif;max-width:760px;margin:32px auto;padding:0 20px;color:#0A0E2A}h1{font-size:26px;letter-spacing:-.02em}h2{margin-top:30px;border-bottom:2px solid #E0DBFF;padding-bottom:4px;color:#3B26B8}table{border-collapse:collapse;width:100%}td,th{border:1px solid #E3E1F5;padding:6px 10px;text-align:left}th{background:#F6F5FF}</style></head><body><h1>AlgoMind: resume-to-role analysis</h1><p>Candidate: ${e(prof.name)}<br>Generated: ${new Date().toLocaleDateString()}<br>Note: values in this report are demonstration data.</p>
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>AlgoMind analysis report</title><style>body{font:14px/1.6 system-ui,sans-serif;max-width:760px;margin:32px auto;padding:0 20px;color:#0A0E2A}h1{font-size:26px;letter-spacing:-.02em}h2{margin-top:30px;border-bottom:2px solid #E0DBFF;padding-bottom:4px;color:#3B26B8}table{border-collapse:collapse;width:100%}td,th{border:1px solid #E3E1F5;padding:6px 10px;text-align:left}th{background:#F6F5FF}</style></head><body><h1>AlgoMind: resume-to-role analysis</h1><p>Candidate: ${e(prof.name)}<br>Generated: ${new Date().toLocaleDateString()}<br>${res[0].demo ? "Note: values in this report are demonstration data." : "Scores and explanations are AI-generated."}</p>
 <h2>Role ranking</h2><table><tr><th>Rank</th><th>Role</th><th>Alignment</th></tr>${res.map((r, i) => `<tr><td>${i + 1}</td><td>${e(r.title)}</td><td>${r.score}%</td></tr>`).join("")}</table>
 ${res.map(r => `<h2>${e(r.title)} (${r.score}%)</h2><p>${e(r.why)}</p><p><b>Matched:</b> ${e(r.matched.join(", "))}</p><p><b>Missing:</b> ${e(r.missing.join(", "))}</p><p><b>Recommendations:</b></p><ul>${r.recs.map(x => `<li>${e(x)}</li>`).join("")}</ul><p><b>Roadmap:</b></p><ul>${r.road.map(p => `<li>${e(p[0])}: ${e(p[1])}</li>`).join("")}</ul>`).join("")}</body></html>`;
 }
@@ -368,7 +370,7 @@ const App = () => {
       const formData = new FormData();
       formData.append("resume", f);
 
-      const response = await fetch("http://127.0.0.1:5000/api/upload", {
+      const response = await fetch(API + "/api/upload", {
         method: "POST",
         body: formData
       });
@@ -402,7 +404,7 @@ const App = () => {
     }
   };
 
-  const sample = () => { tok.current++; setFile(null); setErr(""); setProf(structuredClone(SAMPLE)); setPicked(ROLES.map(r => r.id)); setCust([]); show(rank(ROLES.map(r => r.id), []), "Sample resume"); };
+  const sample = () => { tok.current++; setFile(null); setErr(""); setProf(structuredClone(SAMPLE)); setPicked(ROLES.map(r => r.id)); setCust([]); show(rank(ROLES.map(r => r.id), []).map(r => ({ ...r, demo: true })), "Sample resume"); };
 
   const run = async () => {
     const src = file ? file.name : "Sample resume";
@@ -415,7 +417,7 @@ const App = () => {
     ];
 
     try {
-      const apiPromise = fetch("http://127.0.0.1:5000/api/analyze", {
+      const apiPromise = fetch(API + "/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ profile: prof, roles: selectedRoles })
@@ -446,7 +448,7 @@ const App = () => {
 
   const addJd = () => {
     const t = jd.trim(); if (t.length < 30) return setMsg("Paste a fuller job description (at least a few lines)."); const title = t.split("\n")[0].slice(0, 36);
-    setCust(c => [...c, customRole(title, c.length)]); setJd(""); setDrawer(false);
+    setCust(c => [...c, { ...customRole(title, Date.now()), jd: t }]); setJd(""); setDrawer(false);
   };
   const download = async () => { if (await saveFile("algomind-analysis-report.html", reportHtml(res, prof))) setMsg("Report saved."); };
   const toggle = id => setPicked(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
@@ -468,7 +470,7 @@ const App = () => {
           <button onClick=${logout} class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-rose-50 flex items-center gap-2 text-rose-700 border-t border-bd mt-1"><${Ic} n="out"/>Log out</button></div>`}</div></div></div></header>
 
   <div class="flex-1">${view === "work" && html`<${Workspace} a=${A}/>`}${view === "run" && html`<${Running} step=${step}/>`}${view === "dash" && res && html`<${Results} a=${A}/>`}</div>
-  <footer class="border-t border-bd/70 mt-6"><div class="max-w-6xl mx-auto px-5 py-6 text-xs text-mu flex flex-wrap justify-between gap-2"><span>AlgoMind, resume-to-role semantic alignment</span><span>Frontend prototype. No data is sent anywhere.</span></div></footer>
+  <footer class="border-t border-bd/70 mt-6"><div class="max-w-6xl mx-auto px-5 py-6 text-xs text-mu flex flex-wrap justify-between gap-2"><span>AlgoMind, resume-to-role semantic alignment</span><span>Resumes are processed by the AlgoMind backend and Google Gemini.</span></div></footer>
   <div role="status" aria-live="polite" class=${cx("fixed left-1/2 -translate-x-1/2 bottom-[calc(24px+env(safe-area-inset-bottom,0px))] z-50 glass-dark text-sm font-medium px-5 py-3 rounded-2xl transition-all duration-300 max-w-[90vw]", msg ? "opacity-100" : "opacity-0 translate-y-2 pointer-events-none")}>${msg}</div></div><//>`;
 };
 ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
