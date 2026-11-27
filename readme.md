@@ -1,217 +1,444 @@
-# Autonomous Resume to-Role Semantic Alignment Ranking Engine
+<div align="center">
 
-**Project Team:** AlgoMind (Team-38)  
-**Course Code:** BCSJ0010 (Mini-Project)  
-**Institution:** GLA University, Mathura  
-**GitHub Repository:** [https://github.com/yashashvigupta16/MiniProject.git](https://github.com/yashashvigupta16/MiniProject.git)
+<img src="docs/banner.svg" alt="AlgoMind: see which roles your resume truly speaks to" width="100%">
 
----
+<br><br>
 
-## 📌 Project Overview
+![Python](https://img.shields.io/badge/Python-3.14-6C4BFF?style=for-the-badge&logo=python&logoColor=white&labelColor=0A0E2A)
+![Flask](https://img.shields.io/badge/Flask-3.1-2F7BFF?style=for-the-badge&logo=flask&logoColor=white&labelColor=0A0E2A)
+![React](https://img.shields.io/badge/React-18-6C4BFF?style=for-the-badge&logo=react&logoColor=white&labelColor=0A0E2A)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-2F7BFF?style=for-the-badge&logo=tailwindcss&logoColor=white&labelColor=0A0E2A)
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-6C4BFF?style=for-the-badge&logo=mongodb&logoColor=white&labelColor=0A0E2A)
+![Gemini](https://img.shields.io/badge/Google_Gemini-AI-2F7BFF?style=for-the-badge&logo=googlegemini&logoColor=white&labelColor=0A0E2A)
 
-When college students and freshers apply for jobs, they often struggle to identify which specific job roles best match their skills, projects, and coursework. Traditional resume screening software relies strictly on exact keyword matching (e.g., checking if the exact word "Python" appears in both the resume and job post). If a student writes "Data Analysis using Pandas" instead of "Data Analyst", traditional keyword engines often fail to establish the connection.
+**Upload a resume. Rank every role. See why. Know what to learn next.**
 
-This project is an **AI-assisted career helper** that processes a student's resume (PDF format), compares it with multiple job descriptions, and calculates a match score based on contextual meaning (semantic similarity). Using **Retrieval-Augmented Generation (RAG)**, the system retrieves relevant job knowledge and context to feed into Google Gemini API, producing grounded, highly tailored resume explanations and upskilling action plans.
+[✨ Showcase](#-showcase) &nbsp;•&nbsp;
+[🧠 How it thinks](#-how-algomind-thinks) &nbsp;•&nbsp;
+[🚀 Quick start](#-quick-start) &nbsp;•&nbsp;
+[🔌 API](#-api-reference) &nbsp;•&nbsp;
+[👥 Team](#-team-algomind)
 
----
+</div>
 
-## ⚙️ Tech Stack
+<br>
 
-### 🌐 Frontend (User Interface)
-* **HTML5 & CSS3:** Page structure, custom layout, and responsive design.
-* **JavaScript (ES6):** Dynamic UI operations, file handling, and API integration (`fetch` / `axios`).
-* **React.js:** Modular UI components (Resume Upload Card, Score Card, Skill Badges, RAG Recommendations).
+## 💡 The problem
 
-### ⚙️ Backend & Database
-* **Python 3.10:** Main backend server implementation language.
-* **Flask & Flask-CORS:** Lightweight Python web framework providing REST API endpoints.
-* **MongoDB:** NoSQL database storing job roles, candidate profiles, and analysis logs.
-* **Google Gemini API (Free Tier):** Generates natural-language feedback and personalized upskilling advice.
+Keyword filters look for exact words. A student who writes *"Data analysis using Pandas"* can be missed by a search for *"Data Analyst"*, and rarely learns why.
 
-### 🧠 Machine Learning, NLP & RAG Pipeline
-* **PyMuPDF (`fitz`):** Extracts raw text from uploaded PDF resumes.
-* **spaCy (`en_core_web_sm`):** Natural Language Processing library for skill parsing and entity extraction.
-* **Sentence-Transformers (`all-MiniLM-L6-v2`):** Pre-trained local embedding model that converts resume and job text into dense vector representations.
-* **FAISS / Vector Index:** Vector database engine used for fast similarity retrieval in the Retrieval-Augmented Generation (RAG) pipeline.
-* **Scikit-learn:** Computes Cosine Similarity scores between candidate and role vectors.
+**AlgoMind reads for meaning.** It extracts your profile, compares it with the roles you care about, explains every score and turns each gap into a plan.
 
----
+<table>
+<tr>
+<td width="33%" valign="top">
 
-## 🏗️ Project Architecture & Workflow
+### 📄 Smart extraction
+PDF or DOCX in, structured profile out: skills, education, projects, certifications, experience, internships and achievements. **Every item is editable.**
 
-The system uses a 3-Tier Architecture combining frontend components, backend REST APIs, and a RAG-augmented ML engine.
+</td>
+<td width="33%" valign="top">
 
+### 🎯 Multi-role ranking
+Pick built-in roles or **paste any job description**. Each role gets its own alignment score, ordered highest first.
+
+</td>
+<td width="33%" valign="top">
+
+### 🔍 Explainable scores
+Skills, project relevance, education fit and experience depth, shown on a **radar chart** with a written reason.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+### 📊 Skill-gap analysis
+Your estimated level against what the role expects, sorted into **High, Medium and Low** priority.
+
+</td>
+<td valign="top">
+
+### 🗺️ Learning roadmap
+A phased, week-by-week plan with tasks you can **tick off** as you go.
+
+</td>
+<td valign="top">
+
+### ⚖️ Compare and export
+View roles **side by side**, spot repeated gaps and **download a report**.
+
+</td>
+</tr>
+</table>
+
+<br>
+
+## ✨ Showcase
+
+<div align="center">
+
+<img src="docs/screenshots/landing.png" alt="AlgoMind landing page" width="100%">
+
+<sub><b>Landing page</b> · midnight navy, violet and electric blue</sub>
+
+<br><br>
+
+<img src="docs/screenshots/results.png" alt="Results dashboard with KPIs, match scores and radar chart" width="100%">
+
+<sub><b>Results dashboard</b> · best match, average alignment, ranked roles and alignment profile</sub>
+
+</div>
+
+<br>
+
+<table>
+<tr>
+<td width="50%" align="center" valign="top"><img src="docs/screenshots/workspace.png" alt="Workspace with editable profile and role selection"><br><sub><b>Workspace</b> · review your profile, choose roles</sub></td>
+<td width="50%" align="center" valign="top"><img src="docs/screenshots/overview.png" alt="Role overview with score breakdown"><br><sub><b>Role overview</b> · score breakdown and reasoning</sub></td>
+</tr>
+<tr>
+<td align="center" valign="top"><img src="docs/screenshots/skill-gaps.png" alt="Skill gap analysis"><br><sub><b>Skill gaps</b> · current level against expectation</sub></td>
+<td align="center" valign="top"><img src="docs/screenshots/roadmap.png" alt="Career improvement roadmap"><br><sub><b>Roadmap</b> · a phased plan with checkable tasks</sub></td>
+</tr>
+</table>
+
+<details>
+<summary><b>⚖️ See the role comparison view</b></summary>
+<br>
+<img src="docs/screenshots/compare.png" alt="Side-by-side role comparison" width="100%">
+</details>
+
+> [!NOTE]
+> Screenshots use the built-in **sample profile** and sample results. The person shown is fictional.
+
+<br>
+
+## 🧠 How AlgoMind thinks
+
+### System architecture
+
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'primaryColor':'#EFEBFF','primaryTextColor':'#0A0E2A','primaryBorderColor':'#6C4BFF','lineColor':'#6C4BFF','secondaryColor':'#EAF2FF','tertiaryColor':'#F8F7FF'}}}%%
+flowchart LR
+    U(["👤 Candidate"]) --> FE["🖥️ Dashboard<br/>React 18 + HTM + Tailwind"]
+    FE <-->|"REST / JSON"| API["⚙️ Flask API"]
+    API --> EX["📄 Text extraction<br/>PyMuPDF · PyPDF2 · DOCX"]
+    API --> GEM["✨ Google Gemini<br/>profile + role analysis"]
+    API --> ML["🧠 ML engine<br/>SBERT · FAISS · skill gap"]
+    API --> DB[("🗄️ MongoDB<br/>resumes · analyses")]
+    ML --> KB[/"📚 job_roles.json<br/>skill_knowledge.json"/]
 ```
-+---------------------------------------------------------------------------------+
-|                                  FRONTEND                                       |
-|                      (React.js + HTML / CSS / JavaScript)                       |
-|                                                                                 |
-|   [ Resume Upload (PDF) ] ----> [ Role Selection ] ----> [ Ranked Results Dashboard ]
-+----------------------------------------+----------------------------------------+
-                                         |
-                                         | REST API Requests (Axios / JSON)
-                                         v
-+---------------------------------------------------------------------------------+
-|                                   BACKEND                                       |
-|                           (Python / Flask REST API)                             |
-|                                                                                 |
-|   - POST /api/upload-resume : Parses PDF text                                  |
-|   - GET  /api/roles         : Fetches job descriptions                         |
-|   - POST /api/analyze       : Triggers SBERT vector matching & RAG pipeline    |
-|   - GET  /api/history       : Retrieves previous evaluation logs             |
-+-------------------+------------------------------------+------------------------+
-                    |                                    |
-                    v                                    v
-+---------------------------------------+    +------------------------------------+
-|               DATABASE                |    |         ML & RAG ENGINE            |
-|              (MongoDB)                |    |   (PyMuPDF + spaCy + SBERT + RAG)  |
-|                                       |    |                                    |
-| - Stored Job Descriptions             |    | 1. Extract PDF text using PyMuPDF   |
-| - Extracted Candidate Profiles        |    | 2. Parse skills using spaCy NLP    |
-| - Saved Analysis Logs & Gemini Notes  |    | 3. Create SBERT vector embeddings  |
-|                                       |    | 4. Cosine Similarity ranking       |
-|                                       |    | 5. RAG Vector Retrieval (FAISS)    |
-|                                       |    | 6. Gemini API Context Synthesis    |
-+---------------------------------------+    +------------------------------------+
+
+### Request journey
+
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'primaryColor':'#EFEBFF','primaryTextColor':'#0A0E2A','primaryBorderColor':'#6C4BFF','lineColor':'#6C4BFF','actorBkg':'#EFEBFF','actorBorder':'#6C4BFF','signalColor':'#6C4BFF','signalTextColor':'#6C4BFF','noteBkgColor':'#EAF2FF','noteBorderColor':'#2F7BFF'}}}%%
+sequenceDiagram
+    autonumber
+    actor C as Candidate
+    participant D as Dashboard
+    participant F as Flask
+    participant M as ML engine
+    participant G as Gemini
+    participant DB as MongoDB
+
+    C->>D: Drop PDF / DOCX
+    D->>F: POST /api/upload
+    F->>F: Extract text
+    F->>G: Structure the profile
+    G-->>F: Profile JSON
+    F->>M: Rank roles semantically
+    M-->>F: ml_ranking
+    F->>DB: Save resume
+    F-->>D: Editable profile
+    C->>D: Pick roles and run
+    D->>F: POST /api/analyze
+    F->>G: Compare profile with roles
+    G-->>F: Scores, gaps, roadmap
+    F->>F: Validate and normalize
+    F->>DB: Save analysis
+    F-->>D: Ranked results
 ```
 
-### Detailed Execution Pipeline
+### Two engines, one platform
 
-1. **Upload:** User uploads a PDF resume via the React interface.
-2. **Text Extraction:** Flask receives the file (`POST /api/upload-resume`) and passes it to `PyMuPDF` to extract clean text.
-3. **Skill Parsing:** `spaCy` analyzes the text to group skills, education, and experience projects.
-4. **Vector Embeddings:** SBERT (`all-MiniLM-L6-v2`) converts resume and job description text into 384-dimensional dense vectors.
-5. **Similarity Calculation:** Cosine Similarity measures the angular distance between vectors to calculate a match score (0% to 100%).
-6. **RAG Context Retrieval:** Relevant skill gaps and role requirements are retrieved from a FAISS vector index based on user embeddings.
-7. **Gemini Feedback Generation:** The retrieved RAG context is passed to the Google Gemini API to generate accurate, context-aware suggestions without hallucinations.
-8. **Output Storage:** Flask saves results into MongoDB and returns ranked roles, match scores, missing skills, and RAG-augmented AI feedback back to the React UI.
+| | 🧠 Semantic ML engine | ✨ Gemini analysis |
+| :--- | :--- | :--- |
+| **Runs** | Locally | Google Gemini API |
+| **Method** | SBERT embeddings, cosine similarity, FAISS retrieval | Structured prompting with response validation |
+| **Roles** | Defined in `data/job_roles.json` | Dashboard roles and pasted job descriptions |
+| **Output** | Similarity, matched and missing skills, learning tips | Scores, explanation, gaps, roadmap |
+| **Where it appears** | API response (`ml_ranking`) and MongoDB | **The dashboard** |
 
----
+#### The ML scoring formula
 
-## 🔌 API Endpoints Summary
-
-| Endpoint | Method | Description | Payload / Parameters |
-| :--- | :--- | :--- | :--- |
-| `/api/upload-resume` | `POST` | Uploads PDF resume and extracts raw text | `file`: PDF File |
-| `/api/roles` | `GET` | Fetches available job descriptions from MongoDB | None |
-| `/api/analyze` | `POST` | Executes SBERT vector search & RAG-augmented Gemini feedback | `{ resume_id, selected_roles }` |
-| `/api/history` | `GET` | Retrieves past user evaluations | None |
-
----
-
-## 📂 Project Directory Structure
-
-```
-MiniProject/
-├── README.md                  # Project documentation
-├── requirements.txt           # Required Python packages list
-│
-├── backend/                   # Python Flask backend
-│   ├── app.py                 # Main Flask REST API server
-│   ├── db.py                  # MongoDB connection setup
-│   ├── gemini_helper.py       # Google Gemini API integration module
-│   └── uploads/               # Temporary storage for uploaded PDFs
-│
-├── ml_engine/                 # Machine Learning & RAG pipeline
-│   ├── pdf_parser.py          # PDF text extraction logic
-│   ├── skill_extractor.py     # Skill extraction using spaCy
-│   ├── similarity.py          # SBERT embedding & Cosine calculation
-│   └── rag_retriever.py       # RAG pipeline using vector retrieval
-│
-└── frontend/                  # React + Web frontend
-    ├── public/
-    │   └── index.html         # Main HTML document
-    └── src/
-        ├── App.js             # Main React component
-        ├── App.css            # Styling rules
-        ├── api.js             # API request handlers (Fetch / Axios)
-        └── components/        # UI components (Upload, Results, Feedback)
+```math
+\text{Overall Match} = 0.6 \times \text{Semantic Similarity} + 0.4 \times \text{Skill Match \%}
 ```
 
----
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'primaryColor':'#EFEBFF','primaryTextColor':'#0A0E2A','primaryBorderColor':'#6C4BFF','lineColor':'#6C4BFF'}}}%%
+flowchart LR
+    R["Resume text"] --> E["all-MiniLM-L6-v2<br/>384-dim vector"]
+    J["Role description"] --> E
+    E --> S["Cosine similarity<br/><b>60%</b>"]
+    R --> K["Skill dictionary<br/>matching"]
+    K --> P["Skill match<br/><b>40%</b>"]
+    S --> O(["🏆 Overall score"])
+    P --> O
+    K --> X["Missing skills"] --> V["FAISS retrieval<br/>threshold 0.30"] --> T["📚 Learning tips"]
+```
 
-## 📊 Sample Output Format
+<br>
 
-| Rank | Job Role | Alignment Score | Matched Skills | Key Missing Skills | AI Explanation (RAG + Gemini API) |
-| :---: | :--- | :---: | :--- | :--- | :--- |
-| **1** | Machine Learning Engineer | **87%** | Python, SQL, ML, Pandas | Docker, PyTorch | *"Great alignment with Python and ML basics. Based on retrieved role requirements, building a PyTorch project will bridge your major skill gap."* |
-| **2** | Data Analyst | **81%** | Python, SQL, Excel, Power BI | Tableau | *"Strong data handling background. Adding Tableau or similar visualization tools will boost your suitability for analyst roles."* |
-| **3** | Data Scientist | **76%** | Python, ML, Statistics | R, Deep Learning | *"Solid mathematical foundation. Focus on core deep learning concepts to improve your alignment score."* |
-| **4** | Software Developer | **68%** | Python, SQL | Java, Data Structures | *"Needs core computer science fundamentals like Data Structures and Object-Oriented Programming in Java or C++."* |
+## 🚀 Quick start
 
----
+### Prerequisites
 
-## 🛠️ Step-by-Step Setup Guide
+- **Python 3.14** (the version the project is developed on) and **Git**
+- A **MongoDB** connection string (local or Atlas)
+- A **Google Gemini API key** from [Google AI Studio](https://aistudio.google.com/)
+- An internet connection (the UI loads libraries and fonts from CDNs)
 
-### 1. System Requirements
-* Python 3.10+ installed
-* Node.js & npm installed (for React)
-* MongoDB Community Server running locally (or MongoDB Atlas connection string)
-* Google Gemini API Key (Free tier key from Google AI Studio)
+### 1️⃣ Clone
 
-### 2. Clone the Repository
 ```bash
 git clone https://github.com/yashashvigupta16/MiniProject.git
 cd MiniProject
 ```
 
-### 3. Setting Up Backend, ML & Environment Variables
-```bash
-# Create a Python virtual environment
-python -m venv venv
+### 2️⃣ Install
 
-# Activate virtual environment
-# Windows:
-venv\Scripts\activate
-# Mac/Linux:
-source venv/bin/activate
-
-# Install Python packages
-pip install -r requirements.txt
-
-# Download spaCy English language model
-python -m spacy download en_core_web_sm
+```powershell
+python -m venv Backend\venv
+Backend\venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-Create a `.env` file inside the `backend/` directory:
+### 3️⃣ Configure
+
+Create `Backend/.env`:
+
 ```env
-MONGO_URI=mongodb://localhost:27017/resumedb
-GEMINI_API_KEY=your_free_gemini_api_key_here
+MONGO_URI=your_mongodb_connection_string
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
-### 4. Running Backend Server
+### 4️⃣ Launch 🎉
+
+```powershell
+.\run
+```
+
+One command starts the backend and frontend, then opens **http://localhost:5000**. Press `Ctrl + C` to stop.
+
+> [!TIP]
+> No Node.js and no build step. The first start downloads the SBERT model, so give it a little longer.
+
+<details>
+<summary><b>🍎 macOS / Linux</b> (not tested by the team)</summary>
+
 ```bash
-python backend/app.py
+python3 -m venv Backend/venv
+Backend/venv/bin/python -m pip install -r requirements.txt
+Backend/venv/bin/python Backend/app.py
 ```
-*Backend REST API will run on `http://127.0.0.1:5000`*
 
-### 5. Running Frontend React App
-```bash
-cd frontend
-npm install
-npm start
+</details>
+
+<br>
+
+## 🔌 API reference
+
+Base URL: `http://127.0.0.1:5000`
+
+| Method | Endpoint | Purpose | Input |
+| :---: | :--- | :--- | :--- |
+| 🟢 `GET` | `/api/health` | Server status | none |
+| 🟣 `POST` | `/api/upload` | Extract a profile and run ML ranking | form-data `resume` (PDF / DOCX) |
+| 🟣 `POST` | `/api/analyze` | Deep role analysis with Gemini | `{ "profile": {}, "roles": [] }` |
+| 🟣 `POST` | `/api/ml-rank` | ML ranking only, no Gemini call | `{ "resume_text": "..." }` |
+
+<details>
+<summary><b>📦 Example: <code>/api/analyze</code></b></summary>
+
+Request
+
+```json
+{
+  "profile": { "name": "Aarav Mehta", "skills": ["Python", "SQL"] },
+  "roles": [{ "id": "da", "title": "Data Analyst", "req_skills": ["SQL", "Excel"] }]
+}
 ```
-*Frontend will open in browser at `http://localhost:3000`*
 
----
+Response (shortened, illustrative values)
 
-## 👥 Team Members & Roles
+```json
+{
+  "results": [{
+    "id": "da",
+    "title": "Data Analyst",
+    "score": 74,
+    "b": { "Skills match": 70, "Project relevance": 72, "Education fit": 85, "Experience depth": 60 },
+    "why": "Strong SQL foundation. Reporting experience is not yet shown.",
+    "matched": ["SQL"],
+    "missing": ["Excel"],
+    "gaps": [["Excel", 20, 70]],
+    "road": [["Weeks 1-2", "Spreadsheet skills", ["Practice pivot tables"]]]
+  }]
+}
+```
 
-| Serial | Member Name | Role | Core Responsibility |
-|---|---|---|---|
-| **1** | **Somya Goyal** | ML & NLP Lead | SBERT Embeddings, spaCy NLP Processing, Resume Text Extraction, RAG Pipeline, Semantic Similarity & Job Matching Algorithm |
-| **2** | **Yashashvi Gupta** | Backend & Database Lead | Flask REST API Development, MongoDB Database Design, Gemini API Integration, Backend Logic, Data Processing & API Endpoints |
-| **3** | **Shivangi Goel** | Frontend & UI/UX Lead | React.js Development, Complete UI/UX Design, Resume Upload Interface, Interactive Dashboard, Job Matching Results Display, API Integration & Responsive Web Design |
+</details>
 
-### Shared Responsibilities
-- System Integration & End-to-End Testing
-- Project Documentation
-- Error Handling & Performance Testing
-- Final Project Presentation & Demonstration
+<br>
+
+## 📂 Project structure
+
+```text
+MiniProject/
+├── 🖥️  Frontend/
+│   ├── index.html            # Page shell and CDN libraries
+│   ├── app.js                # React components and app logic
+│   ├── data.js               # Sample data for the demo screens
+│   ├── styles.css            # Design tokens, glass surfaces, 3D hero
+│   └── tailwind.config.js    # Palette, fonts and shadows
+├── ⚙️  Backend/
+│   ├── app.py                # Flask API, also serves the frontend
+│   ├── db.py                 # MongoDB connection
+│   ├── gemini_helper.py      # Prompts, model fallback, validation
+│   └── uploads/              # Uploaded resumes (git-ignored)
+├── 🧠  ml_engine/
+│   ├── pdf_parser.py         # PyMuPDF text extraction
+│   ├── skill_extractor.py    # Dictionary-based skill detection
+│   ├── similarity.py         # SBERT embeddings, cosine similarity
+│   ├── skill_gap.py          # Matched and missing skills
+│   ├── rag_retriever.py      # FAISS knowledge retrieval
+│   └── role_ranker.py        # Weighted role ranking
+├── 📚  data/                  # Job roles and skill knowledge base
+├── 🎨  docs/                  # Banner and screenshots
+├── test_ml.py                # ML pipeline script
+├── test_rag.py               # Retrieval script
+├── requirements.txt
+└── run.bat                   # One-command launcher (Windows)
+```
+
+<br>
+
+## 🧪 Testing the ML engine
+
+```powershell
+Backend\venv\Scripts\python.exe test_rag.py
+```
+
+`test_ml.py` runs the full ranking pipeline. It expects a file named `sample-resume-information-technology.pdf` in the project root, which you supply yourself.
+
+<br>
+
+## 🎨 Design system
+
+| Token | Colour | Used for |
+| :--- | :---: | :--- |
+| Midnight Navy | ![#0A0E2A](https://img.shields.io/badge/-%230A0E2A-0A0E2A?style=flat-square) | Hero, headers, text |
+| Violet | ![#6C4BFF](https://img.shields.io/badge/-%236C4BFF-6C4BFF?style=flat-square) | Primary brand |
+| Electric Blue | ![#2F7BFF](https://img.shields.io/badge/-%232F7BFF-2F7BFF?style=flat-square) | Gradient partner |
+| Lavender | ![#C9BEFF](https://img.shields.io/badge/-%23C9BEFF-C9BEFF?style=flat-square) | Soft accents |
+| Amber | ![#B45F06](https://img.shields.io/badge/-%23B45F06-B45F06?style=flat-square) | Skill-gap markers |
+
+**Type:** Instrument Serif for display, Plus Jakarta Sans for the interface.
+
+<br>
+
+## 🛟 Troubleshooting
+
+| Symptom | Fix |
+| :--- | :--- |
+| *Could not connect to the backend server* | Make sure the `.\run` terminal is still open |
+| `503` / high demand | Gemini is busy. Wait a minute and retry |
+| API key error | Check `GEMINI_API_KEY` in `Backend/.env` |
+| `DB WARNING` in the terminal | Check `MONGO_URI`. Results still display |
+| Unstyled or blank page | Check your internet connection |
+| *Could not extract text* | The PDF is probably a scanned image |
+
+<br>
+
+## 🔭 Current scope and next steps
+
+This is an academic mini-project that runs locally.
+
+- [x] Resume upload, profile extraction and editing
+- [x] Multi-role analysis, skill gaps, roadmap, comparison and report
+- [x] Local semantic ranking with FAISS retrieval
+- [ ] Show the ML engine ranking inside the dashboard
+- [ ] Real authentication (sign-in is currently a prototype)
+- [ ] Persistent analysis history (currently per session)
+- [ ] Larger role and knowledge datasets
+- [ ] Production deployment
+
+> [!IMPORTANT]
+> Uploaded resumes are saved on the server, stored in MongoDB and sent to the Google Gemini API for analysis. AI-generated scores are guidance, not hiring decisions.
+
+<br>
+
+## 👥 Team AlgoMind
+
+<div align="center">
+
+**Team 38** &nbsp;·&nbsp; Mini-Project `BCSJ0010` &nbsp;·&nbsp; **GLA University, Mathura**
+
+</div>
+
+<table>
+<tr>
+<td width="33%" align="center" valign="top">
+
+### 🧠
+**Somya Goyal**<br>
+<sub>ML & NLP Lead</sub>
+
+SBERT embeddings, NLP processing, text extraction, RAG pipeline, semantic similarity and job matching
+
+</td>
+<td width="33%" align="center" valign="top">
+
+### ⚙️
+**[Yashashvi Gupta](https://github.com/yashashvigupta16)**<br>
+<sub>Backend & Database Lead</sub>
+
+Flask REST API, MongoDB design, Gemini integration, backend logic, data processing and endpoints
+
+</td>
+<td width="33%" align="center" valign="top">
+
+### 🎨
+**Shivangi Goel**<br>
+<sub>Frontend & UI/UX Lead</sub>
+
+React development, UI/UX design, upload interface, interactive dashboard, results display and responsive design
+
+</td>
+</tr>
+</table>
+
+<div align="center"><sub>Shared: system integration, testing, documentation, error handling and the final demonstration</sub></div>
+
+<br>
 
 ## 📜 References
 
 1. Reimers, N. and Gurevych, I. (2019). *Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks.* EMNLP.
-2. spaCy NLP Documentation: [https://spacy.io/](https://spacy.io/)
-3. Hugging Face Model: `sentence-transformers/all-MiniLM-L6-v2`
-4. Google Gemini API Documentation: [https://ai.google.dev/](https://ai.google.dev/)
+2. [Sentence-Transformers `all-MiniLM-L6-v2`](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+3. [FAISS](https://github.com/facebookresearch/faiss)
+4. [Google Gemini API documentation](https://ai.google.dev/)
+
+<br>
+
+<div align="center">
+
+### Find out where your resume stands.
+
+⭐ **If AlgoMind impressed you, give the repository a star!** ⭐
+
+<sub>Built with 💜 by Team AlgoMind</sub>
+
+</div>
