@@ -8,3 +8,4 @@ client = MongoClient(os.getenv("MONGO_URI"), serverSelectionTimeoutMS=5000)
 db = client["algomind_db"]
 resumes_col = db["resumes"]
 analyses_col = db["analyses"]
+feedback_col = db["feedback"]

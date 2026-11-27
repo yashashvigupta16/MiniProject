@@ -25,6 +25,7 @@ body{margin:0;background:#F6F5FF;color:var(--ink);-webkit-font-smoothing:antiali
   background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
   background-size:56px 56px;-webkit-mask-image:radial-gradient(ellipse at 60% 30%,#000 10%,transparent 70%);mask-image:radial-gradient(ellipse at 60% 30%,#000 10%,transparent 70%)}
 .fill-brand{background:var(--brand)}
+.fill-blu{background:#2F7BFF}
 .text-grad{background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* Surfaces */

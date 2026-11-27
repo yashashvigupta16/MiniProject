@@ -1,6 +1,6 @@
 const { useState, useEffect, useRef } = React;
-// Same origin when Flask serves this page; otherwise talk to the local backend.
-const API = location.port === "5000" ? "" : "http://127.0.0.1:5000";
+// Same origin when Flask serves this page; opened as a local file, use the default backend.
+const API = location.protocol === "file:" ? "http://127.0.0.1:5000" : "";
 const html = htm.bind(React.createElement);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const cx = (...a) => a.filter(Boolean).join(" ");
@@ -235,7 +235,7 @@ const Running = ({ step }) => {
     <div class="mt-6"><${Bar} v=${pct}/></div>
     <ul class="grid gap-3 mt-7">${STEPS.map((s, i) => html`<li key=${s} class=${cx("flex items-center gap-3 text-sm transition-colors", i <= step ? "text-ink font-medium" : "text-slate-400")}>
       <span class=${cx("w-6 h-6 rounded-full grid place-items-center", i < step ? "fill-brand text-white" : i === step ? "border-2 border-vio text-vio" : "border border-bd")}>${i < step ? html`<${Ic} n="check" s=${13} w=${2.8}/>` : i === step && step < STEPS.length ? html`<span class="w-1.5 h-1.5 rounded-full bg-vio pulse-dot"/>` : null}</span>${s}</li>`)}</ul>
-    <p class="text-xs text-mu mt-7 pt-5 border-t border-bd">Gemini is comparing your profile with each role. This can take a minute.</p><//></main>`;
+    <p class="text-xs text-mu mt-7 pt-5 border-t border-bd">Gemini and the local Sentence-BERT engine are comparing your profile with each role. This can take a minute.</p><//></main>`;
 };
 
 /* ============ RESULTS ============ */
@@ -243,9 +243,19 @@ const SH = { skills: "Skills", education: "Edu.", projects: "Proj.", certificati
 const Kpi = ({ ic, l, v, sub, grad }) => html`<div class="surface lift p-5"><div class="flex items-center justify-between"><span class="text-[13px] font-semibold text-mu">${l}</span><span class=${cx("w-9 h-9 rounded-xl grid place-items-center", grad ? "fill-brand text-white shadow-glow" : "bg-vio-l text-vio")}><${Ic} n=${ic} s=${17}/></span></div><div class="text-[1.9rem] font-extrabold tracking-tight mt-3 tnum leading-none">${v}</div><div class="text-xs text-mu mt-2 truncate">${sub}</div></div>`;
 const Panel = ({ t, sub, c = "", children, right }) => html`<${Card} c=${cx("p-5 md:p-6", c)}><div class="flex items-start justify-between gap-3"><div><h3 class="font-bold">${t}</h3>${sub && html`<p class="text-[13px] text-mu mt-0.5">${sub}</p>`}</div>${right}</div><div class="mt-5">${children}</div><//>`;
 
+const Semantic = ({ m }) => {
+  const req = m.matched.length + m.missing.length;
+  const rows = [["Meaning match", m.semantic, "Sentence-BERT similarity"], ["Skill match", m.skill_match, req ? m.matched.length + " of " + req + " required skills found" : "No listed skills recognised"], ["Engine score", m.overall, "60% meaning + 40% skills"]];
+  return html`<div class="inset p-5 md:p-6"><h4 class="font-bold flex items-center gap-2"><${Ic} n="layers" s=${17} c="text-blu"/>Second opinion: local semantic engine</h4>
+    <p class="text-[13px] text-mu mt-1 max-w-3xl">Sentence-BERT compares the meaning of your resume with this role, and a skill dictionary checks its required skills. It runs on the AlgoMind server, with no AI prompt.</p>
+    <div class="grid sm:grid-cols-3 gap-5 mt-5">${rows.map(([l, v, s]) => html`<div key=${l}><div class="flex justify-between text-sm mb-1.5"><span class="text-mu">${l}</span><b class="tnum">${v}%</b></div><${Bar} v=${v} c="fill-blu"/><div class="text-xs text-mu mt-1.5">${s}</div></div>`)}</div>
+    ${m.tips.length > 0 && html`<div class="mt-6"><div class="text-sm font-bold">Where to start on your gaps <span class="font-normal text-mu">(retrieved with FAISS)</span></div><ul class="grid gap-3 mt-3">${m.tips.map(t => html`<li key=${t.skill} class="text-sm pl-3 border-l-2 border-blu"><b>${t.skill}</b><p class="text-mu mt-0.5">${t.tip}</p></li>`)}</ul></div>`}</div>`;
+};
+
 const Overview = ({ r }) => html`<div class="grid gap-5 fade">
   <div class="inset p-5 md:p-6"><div class="grid sm:grid-cols-[1fr_270px] gap-6 items-center"><div><h4 class="font-bold">Score breakdown</h4><div class="grid gap-4 mt-4">${Object.entries(r.b).map(([k, v]) => html`<div key=${k}><div class="flex justify-between text-sm text-mu mb-1.5"><span>${k}</span><b class="font-bold text-ink tnum">${v}%</b></div><${Bar} v=${v}/></div>`)}</div></div><${Radar} d=${r.b}/></div></div>
   <div class="inset p-5 md:p-6 flex gap-4"><span class="w-9 h-9 rounded-xl bg-vio-l text-vio grid place-items-center shrink-0"><${Ic} n="spark" s=${17}/></span><div><h4 class="font-bold">Why this role fits you</h4><p class="text-mu mt-1.5 leading-relaxed text-[15px] max-w-3xl">${r.why}</p></div></div>
+  ${r.ml && html`<${Semantic} m=${r.ml}/>`}
   <div class="grid md:grid-cols-2 gap-5">
     <div class="inset p-5 md:p-6"><h4 class="font-bold flex items-center gap-2 text-vio-d"><${Ic} n="okc" s=${17}/>Matched skills and projects</h4><div class="flex flex-wrap gap-1.5 mt-3.5">${r.matched.map(s => html`<${Tag} key=${s} t=${s} k="ok"/>`)}</div>
       ${r.proj.map(([t, d]) => html`<div key=${t} class="mt-4 text-sm pl-3 border-l-2 border-vio-m"><b>${t}</b><p class="text-mu mt-0.5">${d}</p></div>`)}</div>
@@ -264,13 +274,13 @@ const Gaps = ({ r }) => {
 };
 
 const Road = ({ r, done, tog }) => {
-  const keys = r.road.flatMap(([, , it], i) => it.map((_, j) => r.id + ":" + i + ":" + j)), n = keys.filter(k => done[k]).length, pct = n ? Math.round(n / keys.length * 100) : 0;
+  const keys = r.road.flatMap(([, , it], i) => it.map(x => r.id + ":" + x)), n = keys.filter(k => done[k]).length, pct = n ? Math.round(n / keys.length * 100) : 0;
   return html`<div class="fade grid gap-5"><div class="inset p-5 flex items-center gap-5"><${Ring} v=${pct} s=${64} w=${7}/><div class="flex-1 min-w-0"><h4 class="font-bold">Career improvement roadmap: ${r.title}</h4><p class="text-[13px] text-mu mt-0.5">A phased plan built from your skill gaps. Tick tasks as you finish them.</p><div class="text-xs text-mu mt-2 tnum">${n} of ${keys.length} tasks done</div></div></div>
   <ol class="relative grid gap-4 pl-0">${r.road.map(([w, t, it], i) => {
-    const dn = it.filter((_, j) => done[r.id + ":" + i + ":" + j]).length;
+    const dn = it.filter(x => done[r.id + ":" + x]).length;
     return html`<li key=${t} class="relative flex gap-4">${i < r.road.length - 1 && html`<span class="absolute left-[19px] top-11 bottom-[-16px] w-px bg-gradient-to-b from-vio-m to-bd"/>`}<span class=${cx("w-10 h-10 rounded-full grid place-items-center font-bold text-sm shrink-0 relative z-10 transition-colors", dn === it.length ? "fill-brand text-white shadow-glow" : "bg-white border-2 border-vio-m text-vio")}>${dn === it.length ? html`<${Ic} n="check" s=${17} w=${2.6}/>` : i + 1}</span>
       <div class="inset p-5 flex-1 min-w-0"><div class="flex flex-wrap justify-between gap-2"><div><span class="text-xs font-semibold text-vio">${w}</span><h4 class="font-bold">${t}</h4></div><span class="text-xs text-mu tnum self-start">${dn}/${it.length}</span></div>
-        <ul class="mt-3 grid gap-2">${it.map((x, j) => { const k = r.id + ":" + i + ":" + j, on = !!done[k]; return html`<li key=${k}><button role="checkbox" aria-checked=${on} onClick=${() => tog(k)} class="w-full flex items-start gap-3 text-left text-sm rounded-lg px-2.5 py-2 -mx-2.5 hover:bg-lav-50 transition-colors"><span class=${cx("w-5 h-5 mt-px rounded-md border grid place-items-center shrink-0 transition-colors", on ? "fill-brand border-transparent text-white" : "border-slate-300 bg-white")}>${on && html`<${Ic} n="check" s=${12} w=${3}/>`}</span><span class=${cx("transition-colors", on ? "text-slate-400 line-through" : "text-mu")}>${x}</span></button></li>`; })}</ul></div></li>`;
+        <ul class="mt-3 grid gap-2">${it.map((x, j) => { const k = r.id + ":" + x, on = !!done[k]; return html`<li key=${k}><button role="checkbox" aria-checked=${on} onClick=${() => tog(k)} class="w-full flex items-start gap-3 text-left text-sm rounded-lg px-2.5 py-2 -mx-2.5 hover:bg-lav-50 transition-colors"><span class=${cx("w-5 h-5 mt-px rounded-md border grid place-items-center shrink-0 transition-colors", on ? "fill-brand border-transparent text-white" : "border-slate-300 bg-white")}>${on && html`<${Ic} n="check" s=${12} w=${3}/>`}</span><span class=${cx("transition-colors", on ? "text-slate-400 line-through" : "text-mu")}>${x}</span></button></li>`; })}</ul></div></li>`;
   })}</ol></div>`;
 };
 
@@ -285,8 +295,15 @@ const Compare = ({ res }) => {
     <div class="inset p-5 md:p-6"><h4 class="font-bold">Skills missing across the selected roles</h4><div class="grid gap-2.5 mt-4">${Object.entries(fq).sort((a, b) => b[1] - a[1]).map(([s, n]) => html`<div key=${s} class="flex justify-between items-center text-sm"><${Tag} t=${s} k="am"/><span class="text-mu text-xs tnum">${n} of ${rs.length} role${rs.length > 1 ? "s" : ""}</span></div>`)}</div></div></div>`;
 };
 
+const Feedback = ({ res }) => {
+  const [sent, setSent] = useState(false);
+  const send = agree => { setSent(true); fetch(API + "/api/feedback", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ top_role: res[0].title, agree, roles: res.length }) }).catch(() => {}); };
+  return html`<div class="surface px-5 py-4 mt-5 flex flex-wrap items-center justify-between gap-3"><p class="text-sm"><b>Does ${res[0].title} as your best fit feel right?</b> <span class="text-mu">One tap helps us check the engine.</span></p>
+    ${sent ? html`<span class="text-sm font-semibold text-ok flex items-center gap-1.5"><${Ic} n="okc" s=${16}/>Thanks, noted.</span>` : html`<div class="flex gap-2"><${Btn} c="btn-sm" onClick=${() => send(true)}><${Ic} n="check" s=${14}/>Yes<//><${Btn} c="btn-sm" onClick=${() => send(false)}><${Ic} n="x" s=${14}/>Not really<//></div>`}</div>`;
+};
+
 const JobCard = ({ x, i, active, onPick }) => html`<button onClick=${onPick} aria-pressed=${active} class=${cx("surface lift text-left p-5 flex flex-col gap-4 w-full", active && "!border-vio shadow-[0_0_0_4px_rgba(108,75,255,.12),var(--sh-2)]")}>
-  <div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex items-center gap-2 mb-1.5"><span class="text-xs font-bold text-vio bg-vio-l rounded-full px-2 py-0.5">#${i + 1}</span>${i === 0 && html`<span class="text-xs font-semibold text-ok bg-ok-l rounded-full px-2 py-0.5">Best fit</span>`}</div><h4 class="font-bold text-[17px] leading-snug">${x.title}</h4></div><${Ring} v=${x.score} s=${62} w=${6}/></div>
+  <div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex items-center gap-2 mb-1.5"><span class="text-xs font-bold text-vio bg-vio-l rounded-full px-2 py-0.5">#${i + 1}</span>${i === 0 && html`<span class="text-xs font-semibold text-ok bg-ok-l rounded-full px-2 py-0.5">Best fit</span>`}</div><h4 class="font-bold text-[17px] leading-snug">${x.title}</h4>${x.ml && html`<div class="text-xs text-mu mt-1">Semantic engine: <b class="text-ink tnum">${x.ml.overall}%</b></div>`}</div><${Ring} v=${x.score} s=${62} w=${6}/></div>
   <div><div class="text-xs font-semibold text-mu mb-1.5">Matched</div><div class="flex flex-wrap gap-1.5">${x.matched.slice(0, 4).map(s => html`<${Tag} key=${s} t=${s} k="ok"/>`)}${x.matched.length > 4 && html`<span class="tag">+${x.matched.length - 4}</span>`}</div></div>
   <div><div class="text-xs font-semibold text-mu mb-1.5">Missing</div><div class="flex flex-wrap gap-1.5">${x.missing.slice(0, 3).map(s => html`<${Tag} key=${s} t=${s} k="am"/>`)}${x.missing.length > 3 && html`<span class="tag">+${x.missing.length - 3}</span>`}</div></div>
   <span class="text-sm font-semibold text-vio flex items-center gap-1.5 mt-auto">${active ? "Viewing analysis" : "View analysis"}<${Ic} n="arrow" s=${15}/></span></button>`;
@@ -302,6 +319,7 @@ const Results = ({ a }) => {
     ${res[0].demo && html`<div class="flex items-start gap-2.5 text-[13px] text-am bg-am-l border border-amber-200 rounded-xl px-4 py-2.5 mb-6"><${Ic} n="info" s=${16} c="mt-0.5"/><span>Demo data: these are built-in sample results. Run an analysis from the workspace for real ones.</span></div>`}
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4"><${Kpi} grad ic="trend" l="Best match" v=${top.score + "%"} sub=${top.title}/><${Kpi} ic="target" l="Average alignment" v=${avg + "%"} sub=${"Across " + res.length + " role" + (res.length > 1 ? "s" : "")}/><${Kpi} ic="layers" l="Resume items" v=${total} sub=${prof.skills.length + " skills in " + SEC.length + " sections"}/><${Kpi} ic="alert" l="Skills to build" v=${uniq.length} sub="Unique gaps across all roles"/></div>
+    ${!res[0].demo && html`<${Feedback} key=${res.map(x => x.id + x.score).join()} res=${res}/>`}
 
     <div class="grid lg:grid-cols-5 gap-5 mt-5">
       <${Panel} c="lg:col-span-3" t="Job match scores" sub="Alignment for each role, highest first.">
@@ -332,8 +350,9 @@ function reportHtml(res, prof) {
   const e = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>AlgoMind analysis report</title><style>body{font:14px/1.6 system-ui,sans-serif;max-width:760px;margin:32px auto;padding:0 20px;color:#0A0E2A}h1{font-size:26px;letter-spacing:-.02em}h2{margin-top:30px;border-bottom:2px solid #E0DBFF;padding-bottom:4px;color:#3B26B8}table{border-collapse:collapse;width:100%}td,th{border:1px solid #E3E1F5;padding:6px 10px;text-align:left}th{background:#F6F5FF}</style></head><body><h1>AlgoMind: resume-to-role analysis</h1><p>Candidate: ${e(prof.name)}<br>Generated: ${new Date().toLocaleDateString()}<br>${res[0].demo ? "Note: values in this report are demonstration data." : "Scores and explanations are AI-generated."}</p>
 <h2>Role ranking</h2><table><tr><th>Rank</th><th>Role</th><th>Alignment</th></tr>${res.map((r, i) => `<tr><td>${i + 1}</td><td>${e(r.title)}</td><td>${r.score}%</td></tr>`).join("")}</table>
-${res.map(r => `<h2>${e(r.title)} (${r.score}%)</h2><p>${e(r.why)}</p><p><b>Matched:</b> ${e(r.matched.join(", "))}</p><p><b>Missing:</b> ${e(r.missing.join(", "))}</p><p><b>Recommendations:</b></p><ul>${r.recs.map(x => `<li>${e(x)}</li>`).join("")}</ul><p><b>Roadmap:</b></p><ul>${r.road.map(p => `<li>${e(p[0])}: ${e(p[1])}</li>`).join("")}</ul>`).join("")}</body></html>`;
+${res.map(r => `<h2>${e(r.title)} (${r.score}%)</h2><p>${e(r.why)}</p>${r.ml ? `<p><b>Semantic engine:</b> ${r.ml.overall}% (meaning ${r.ml.semantic}%, skills ${r.ml.skill_match}%)</p>` : ""}<p><b>Matched:</b> ${e(r.matched.join(", "))}</p><p><b>Missing:</b> ${e(r.missing.join(", "))}</p><p><b>Recommendations:</b></p><ul>${r.recs.map(x => `<li>${e(x)}</li>`).join("")}</ul><p><b>Roadmap:</b></p><ul>${r.road.map(p => `<li>${e(p[0])}: ${e(p[1])}</li>`).join("")}</ul>`).join("")}</body></html>`;
 }
+const stored = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (_) { return d; } };
 async function saveFile(name, data) {
   try { if (window.claude) { const d = await claude.use("downloads"); await d.save({ filename: name, data }); return true; } } catch (e) { if (e && e.code === "declined") return false; }
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data], { type: "text/html" })); a.download = name; a.click(); return true;
@@ -343,15 +362,16 @@ const App = () => {
   const [user, setUser] = useState(null), [gate, setGate] = useState("landing"), [view, setView] = useState("work"), [prof, setProf] = useState(null), [picked, setPicked] = useState(["ml", "da", "ds", "sd"]),
     [cust, setCust] = useState([]), [res, setRes] = useState(null), [act, setAct] = useState(null), [tab, setTab] = useState("ov"), [step, setStep] = useState(0),
     [msg, setMsg] = useState(""), [menu, setMenu] = useState(false), [drawer, setDrawer] = useState(false), [jd, setJd] = useState(""), [err, setErr] = useState(""), [over, setOver] = useState(false),
-    [file, setFile] = useState(null), [hist, setHist] = useState([]), [done, setDone] = useState({});
+    [file, setFile] = useState(null), [hist, setHist] = useState(() => stored("algomind-hist", []).filter(h => h.prof)), [done, setDone] = useState(() => stored("algomind-done", {}));
   const fileRef = useRef(), tok = useRef(0);
+  useEffect(() => { try { localStorage.setItem("algomind-hist", JSON.stringify(hist)); localStorage.setItem("algomind-done", JSON.stringify(done)); } catch (_) {} }, [hist, done]);
   useEffect(() => { if (!msg) return; const t = setTimeout(() => setMsg(""), 2600); return () => clearTimeout(t); }, [msg]);
   const rank = (ids, c) => [...ROLES.filter(r => ids.includes(r.id)), ...c].sort((a, b) => b.score - a.score);
-  const show = (r, src, push = true) => {
+  const show = (r, src, p, push = true) => {
     setRes(r); setAct(r[0].id); setTab("ov"); setView("dash"); scrollTo(0, 0);
-    if (push) setHist(h => [{ id: Date.now() + Math.random(), res: r, top: r[0].title, score: r[0].score, n: r.length, src: src || "Sample resume", time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }, ...h].slice(0, 8));
+    if (push) setHist(h => [{ id: Date.now() + Math.random(), res: r, prof: p, top: r[0].title, score: r[0].score, n: r.length, src: src || "Sample resume", time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }, ...h].slice(0, 8));
   };
-  const openHist = h => { setRes(h.res); setAct(h.res[0].id); setTab("ov"); scrollTo(0, 0); };
+  const openHist = h => { if (h.prof) setProf(h.prof); setRes(h.res); setAct(h.res[0].id); setTab("ov"); scrollTo(0, 0); };
   const setSec = (k, fn) => setProf(p => ({ ...p, [k]: fn(p[k]) }));
   const removeFile = () => { tok.current++; setFile(null); setProf(null); setErr(""); };
   const useSampleResume = () => { tok.current++; setFile(null); setErr(""); setProf(structuredClone(SAMPLE)); };
@@ -404,7 +424,7 @@ const App = () => {
     }
   };
 
-  const sample = () => { tok.current++; setFile(null); setErr(""); setProf(structuredClone(SAMPLE)); setPicked(ROLES.map(r => r.id)); setCust([]); show(rank(ROLES.map(r => r.id), []).map(r => ({ ...r, demo: true })), "Sample resume"); };
+  const sample = () => { const p = structuredClone(SAMPLE); tok.current++; setFile(null); setErr(""); setProf(p); setPicked(ROLES.map(r => r.id)); setCust([]); show(rank(ROLES.map(r => r.id), []).map(r => ({ ...r, demo: true })), "Sample resume", p); };
 
   const run = async () => {
     const src = file ? file.name : "Sample resume";
@@ -434,7 +454,7 @@ const App = () => {
       await sleep(250);
 
       if (response.ok && data.results) {
-        show(data.results, src);
+        show(data.results, src, prof);
       } else {
         throw new Error(data.error || "Analysis failed");
       }
@@ -454,7 +474,7 @@ const App = () => {
   const toggle = id => setPicked(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
   const tog = k => setDone(d => ({ ...d, [k]: !d[k] }));
   const total = picked.length + cust.length, r = res && (res.find(x => x.id === act) || res[0]);
-  const login = u => { setUser(u); setView("work"); scrollTo(0, 0); };
+  const login = u => { setUser(u); setView("work"); const last = hist.find(h => h.prof); if (last) { setProf(last.prof); setRes(last.res); setAct(last.res[0].id); } scrollTo(0, 0); };
   const logout = () => { setMenu(false); setUser(null); setGate("landing"); setView("work"); setRes(null); setProf(null); setFile(null); setHist([]); setDone({}); setErr(""); scrollTo(0, 0); };
   if (!user) return html`<${React.Fragment}><${Defs}/>${gate === "landing" ? html`<${Landing} onStart=${m => { setGate(m); scrollTo(0, 0); }} onDemo=${() => login({ name: "Aarav Mehta", email: "demo@algomind.app" })}/>` : html`<${Auth} key=${gate} mode=${gate} onIn=${login} onBack=${() => { setGate("landing"); scrollTo(0, 0); }}/>`}<//>`;
   const ini = user.name.split(" ").filter(Boolean).map(w => w[0]).slice(0, 2).join("").toUpperCase() || "U";
@@ -462,14 +482,14 @@ const App = () => {
   return html`<${React.Fragment}><${Defs}/><div class="app-bg min-h-screen font-sans text-ink antialiased flex flex-col">
   <header class="sticky top-[env(safe-area-inset-top,0px)] z-40 glass !rounded-none !border-x-0 !border-t-0 border-b border-bd/80"><div class="max-w-6xl mx-auto px-5 min-h-16 flex flex-wrap items-center gap-x-4 gap-y-1 py-2.5">
     <button onClick=${() => setView(res && view === "dash" ? "dash" : "work")} aria-label="AlgoMind home"><${Brand}/></button><span class="hidden lg:inline text-[11px] font-semibold border border-vio-m bg-vio-l text-vio-d px-2.5 py-1 rounded-full">Semantic Engine v1.0</span>
-    <nav class="order-last w-full md:order-none md:w-auto md:ml-4 flex gap-1 text-sm font-semibold">${[["work", "Workspace", "grid"], ["dash", "Results", "bars"]].map(([k, l, ic]) => html`<button key=${k} disabled=${k === "dash" && !res} onClick=${() => setView(k)} class=${cx("flex items-center gap-2 px-3.5 py-2 rounded-xl transition-colors disabled:opacity-40", (view === k || (view === "run" && k === "work")) ? "bg-vio-l text-vio-d" : "text-mu hover:text-ink hover:bg-lav-100")}><${Ic} n=${ic} s=${16}/>${l}</button>`)}</nav>
+    <nav class="order-last w-full md:order-none md:w-auto md:ml-4 flex gap-1 text-sm font-semibold">${[["work", "Workspace", "grid"], ["dash", "Results", "bars"]].map(([k, l, ic]) => html`<button key=${k} disabled=${k === "dash" && !(res && prof)} onClick=${() => setView(k)} class=${cx("flex items-center gap-2 px-3.5 py-2 rounded-xl transition-colors disabled:opacity-40", (view === k || (view === "run" && k === "work")) ? "bg-vio-l text-vio-d" : "text-mu hover:text-ink hover:bg-lav-100")}><${Ic} n=${ic} s=${16}/>${l}</button>`)}</nav>
     <div class="ml-auto flex items-center gap-2.5"><${Btn} c="btn-sm" onClick=${sample}><${Ic} n="zap" s=${15} c="text-vio"/><span class="hidden sm:inline">Load sample analysis</span><span class="sm:hidden">Sample</span><//>
       <div class="relative"><button onClick=${() => setMenu(!menu)} aria-label="Account menu" aria-expanded=${menu} class="w-10 h-10 rounded-full fill-brand text-white text-sm font-bold shadow-glow ring-2 ring-white">${ini}</button>
         ${menu && html`<div class="fixed inset-0 z-40" onClick=${() => setMenu(false)}/><div class="absolute right-0 mt-2.5 w-64 z-50 surface p-1.5 text-sm fade !shadow-lift"><div class="px-3 py-2.5 border-b border-bd mb-1"><b>${user.name}</b><div class="text-xs text-mu truncate">${user.email}</div></div>
           ${["My Profile", "My Resumes", "Saved Roles", "Analysis History", "Settings"].map(t => html`<button key=${t} onClick=${() => { setMenu(false); setMsg(t + " is a placeholder in this prototype."); }} class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-lav-50">${t}</button>`)}
           <button onClick=${logout} class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-rose-50 flex items-center gap-2 text-rose-700 border-t border-bd mt-1"><${Ic} n="out"/>Log out</button></div>`}</div></div></div></header>
 
-  <div class="flex-1">${view === "work" && html`<${Workspace} a=${A}/>`}${view === "run" && html`<${Running} step=${step}/>`}${view === "dash" && res && html`<${Results} a=${A}/>`}</div>
+  <div class="flex-1">${view === "work" && html`<${Workspace} a=${A}/>`}${view === "run" && html`<${Running} step=${step}/>`}${view === "dash" && res && prof && html`<${Results} a=${A}/>`}</div>
   <footer class="border-t border-bd/70 mt-6"><div class="max-w-6xl mx-auto px-5 py-6 text-xs text-mu flex flex-wrap justify-between gap-2"><span>AlgoMind, resume-to-role semantic alignment</span><span>Resumes are processed by the AlgoMind backend and Google Gemini.</span></div></footer>
   <div role="status" aria-live="polite" class=${cx("fixed left-1/2 -translate-x-1/2 bottom-[calc(24px+env(safe-area-inset-bottom,0px))] z-50 glass-dark text-sm font-medium px-5 py-3 rounded-2xl transition-all duration-300 max-w-[90vw]", msg ? "opacity-100" : "opacity-0 translate-y-2 pointer-events-none")}>${msg}</div></div><//>`;
 };

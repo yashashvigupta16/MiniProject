@@ -1,38 +1,28 @@
 {
     "roles": [
         {
-            "role_name": "Python Developer",
-            "description": "Develop Python applications, write clean code, work with APIs, databases, and solve programming problems.",
-            "required_skills": [
-                "Python",
-                "SQL",
-                "Problem Solving",
-                "Communication",
-                "Git"
-            ]
-        },
-        {
-            "role_name": "Data Analyst",
-            "description": "Analyze datasets, clean data, create reports and dashboards, identify trends, and communicate business insights.",
-            "required_skills": [
-                "Python",
-                "SQL",
-                "Data Analysis",
-                "Communication",
-                "Excel",
-                "Power BI"
-            ]
-        },
-        {
+            "id": "ml",
             "role_name": "Machine Learning Engineer",
-            "description": "Build machine learning models, process data, develop predictive systems, use Python libraries, and evaluate model performance.",
-            "required_skills": [
-                "Python",
-                "Machine Learning",
-                "Data Analysis",
-                "SQL",
-                "Problem Solving"
-            ]
+            "description": "Build, train and evaluate machine learning and deep learning models in Python, prepare data with Pandas and NumPy, use scikit-learn, PyTorch or TensorFlow, and package models for deployment with Docker and Git.",
+            "required_skills": ["Python", "Machine Learning", "Deep Learning", "Scikit-learn", "Pandas", "NumPy", "PyTorch", "Docker", "Git", "SQL"]
+        },
+        {
+            "id": "da",
+            "role_name": "Data Analyst",
+            "description": "Collect, clean and analyse datasets with SQL, Excel and Python, build reports and dashboards in Power BI or Tableau, find trends and communicate business insights to stakeholders.",
+            "required_skills": ["SQL", "Excel", "Python", "Pandas", "Data Analysis", "Data Visualization", "Power BI", "Tableau", "Communication"]
+        },
+        {
+            "id": "ds",
+            "role_name": "Data Scientist",
+            "description": "Explore data, apply statistics and machine learning to answer business questions, build predictive models in Python with Pandas, NumPy and scikit-learn, and explain results through visualisations.",
+            "required_skills": ["Python", "Machine Learning", "Data Analysis", "Pandas", "NumPy", "Scikit-learn", "SQL", "Deep Learning", "Data Visualization", "Research"]
+        },
+        {
+            "id": "sd",
+            "role_name": "Software Developer",
+            "description": "Design, write and test application code in Python, Java or JavaScript, build web APIs and interfaces, work with databases, use Git for version control and solve programming problems.",
+            "required_skills": ["Python", "Java", "JavaScript", "SQL", "Git", "Flask", "React", "HTML", "CSS", "Problem Solving"]
         }
     ]
 }

@@ -46,7 +46,7 @@ Pick built-in roles or **paste any job description**. Each role gets its own ali
 <td width="33%" valign="top">
 
 ### 🔍 Explainable scores
-Skills, project relevance, education fit and experience depth, shown on a **radar chart** with a written reason.
+Skills, project relevance, education fit and experience depth, shown on a **radar chart** with a written reason, plus a **second opinion from the local SBERT engine**.
 
 </td>
 </tr>
@@ -60,7 +60,7 @@ Your estimated level against what the role expects, sorted into **High, Medium a
 <td valign="top">
 
 ### 🗺️ Learning roadmap
-A phased, week-by-week plan with tasks you can **tick off** as you go.
+A phased, week-by-week plan with tasks you can **tick off**. Progress is **saved in your browser**.
 
 </td>
 <td valign="top">
@@ -166,10 +166,10 @@ sequenceDiagram
 | | 🧠 Semantic ML engine | ✨ Gemini analysis |
 | :--- | :--- | :--- |
 | **Runs** | Locally | Google Gemini API |
-| **Method** | SBERT embeddings, cosine similarity, FAISS retrieval | Structured prompting with response validation |
-| **Roles** | Defined in `data/job_roles.json` | Dashboard roles and pasted job descriptions |
+| **Method** | SBERT embeddings, cosine similarity, FAISS retrieval | Structured prompting at temperature 0, with response validation |
+| **Roles** | Shared role library in `data/job_roles.json`, plus pasted job descriptions | The same roles and job descriptions |
 | **Output** | Similarity, matched and missing skills, learning tips | Scores, explanation, gaps, roadmap |
-| **Where it appears** | API response (`ml_ranking`) and MongoDB | **The dashboard** |
+| **Where it appears** | Dashboard: engine score on each job card and a "second opinion" panel with FAISS learning tips | Dashboard: ranking, breakdown, gaps and roadmap |
 
 #### The ML scoring formula
 
@@ -257,6 +257,7 @@ Base URL: `http://127.0.0.1:5000`
 | 🟢 `GET` | `/api/health` | Server status | none |
 | 🟣 `POST` | `/api/upload` | Extract a profile and run ML ranking | form-data `resume` (PDF / DOCX) |
 | 🟣 `POST` | `/api/analyze` | Deep role analysis with Gemini | `{ "profile": {}, "roles": [] }` |
+| 🟣 `POST` | `/api/feedback` | Saves the one-tap "Does this feel right?" answer | `{ "top_role": "...", "agree": true }` |
 | 🟣 `POST` | `/api/ml-rank` | ML ranking only, no Gemini call | `{ "resume_text": "..." }` |
 
 <details>
@@ -307,7 +308,7 @@ MiniProject/
 │   ├── app.py                # Flask API, also serves the frontend
 │   ├── db.py                 # MongoDB connection
 │   ├── gemini_helper.py      # Prompts, model fallback, validation
-│   └── uploads/              # Uploaded resumes (git-ignored)
+│   └── uploads/              # Temporary; each resume is deleted once read
 ├── 🧠  ml_engine/
 │   ├── pdf_parser.py         # PyMuPDF text extraction
 │   ├── skill_extractor.py    # Dictionary-based skill detection
@@ -369,14 +370,15 @@ This is an academic mini-project that runs locally.
 - [x] Resume upload, profile extraction and editing
 - [x] Multi-role analysis, skill gaps, roadmap, comparison and report
 - [x] Local semantic ranking with FAISS retrieval
-- [ ] Show the ML engine ranking inside the dashboard
+- [x] Show the ML engine ranking inside the dashboard
 - [ ] Real authentication (sign-in is currently a prototype)
-- [ ] Persistent analysis history (currently per session)
+- [x] Analysis history and roadmap progress saved in the browser
+- [x] One-tap feedback on the top role, stored for evaluation
 - [ ] Larger role and knowledge datasets
 - [ ] Production deployment
 
 > [!IMPORTANT]
-> Uploaded resumes are saved on the server, stored in MongoDB and sent to the Google Gemini API for analysis. AI-generated scores are guidance, not hiring decisions.
+> Uploaded resume files are deleted as soon as their text is read. The extracted profile is stored in MongoDB, and the text is sent to the Google Gemini API for analysis. AI-generated scores are guidance, not hiring decisions.
 
 <br>
 

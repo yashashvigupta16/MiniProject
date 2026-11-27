@@ -17,7 +17,8 @@ def _generate_json(prompt):
             res = client.models.generate_content(
                 model=model_name,
                 contents=prompt,
-                config={"response_mime_type": "application/json"}
+                # temperature 0: the same resume should get the same scores
+                config={"response_mime_type": "application/json", "temperature": 0}
             )
             return json.loads(res.text)
         except Exception as e:

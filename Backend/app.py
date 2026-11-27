@@ -1,7 +1,9 @@
 import os
 import sys
 import threading
+import uuid
 import webbrowser
+from datetime import datetime, timezone
 import zipfile
 from xml.etree import ElementTree
 from flask import Flask, request, jsonify, send_from_directory
@@ -18,12 +20,17 @@ for p in (BACKEND_DIR, PROJECT_ROOT):
     if p not in sys.path:
         sys.path.insert(0, p)
 
-from db import resumes_col, analyses_col
+from db import resumes_col, analyses_col, feedback_col
 from gemini_helper import parse_resume_with_gemini, analyze_roles_with_gemini
 
 # ml_engine lives in the project root
 from ml_engine.pdf_parser import extract_text_from_pdf
-from ml_engine.role_ranker import rank_roles
+from ml_engine.role_ranker import rank_roles, align_roles, load_job_roles
+
+# One role library for both engines, keyed by the dashboard's role ids
+ROLE_LIBRARY = {r["id"]: r for r in load_job_roles()}
+PROFILE_FIELDS = ["skills", "education", "projects", "certifications",
+                  "experience", "internships", "achievements"]
 
 # ── app setup ─────────────────────────────────────────────────────────────────
 app = Flask(__name__)
@@ -84,17 +91,62 @@ def _save(collection, document: dict) -> None:
 
 
 def _ml_rank(resume_text: str) -> list:
-    """Run the SBERT + FAISS ML ranking engine.
+    """Run the SBERT + FAISS ML ranking engine over the role library."""
+    return rank_roles(resume_text)
 
-    Changes CWD briefly so that rank_roles() can find data/ via its
-    relative paths, then restores CWD.
+
+def _profile_text(profile: dict) -> str:
+    """The resume text for the semantic engine.
+
+    Uses the uploaded resume's text, plus anything the student added while
+    editing; the sample profile has no upload, so its fields are used alone.
     """
-    original_cwd = os.getcwd()
-    try:
-        os.chdir(PROJECT_ROOT)
-        return rank_roles(resume_text)
-    finally:
-        os.chdir(original_cwd)
+    parts = [profile.get("summary") or ""]
+    for field in PROFILE_FIELDS:
+        parts += [str(x) for x in profile.get(field) or []]
+    edited = "\n".join(p for p in parts if p)
+    raw = profile.get("rawText") or ""
+    return (raw + "\n" + edited).strip()
+
+
+def _library_roles(roles: list) -> list:
+    """Give each built-in role its description and required skills from the
+    shared library; pasted job descriptions are passed through as they are."""
+    out = []
+    for r in roles:
+        lib = ROLE_LIBRARY.get(r.get("id"))
+        if lib:
+            r = {**r, "description": lib["description"], "req_skills": lib["required_skills"]}
+        out.append(r)
+    return out
+
+
+def _semantic_scores(profile: dict, roles: list) -> dict:
+    """SBERT similarity, skill match and FAISS learning tips for each role."""
+    text = _profile_text(profile)
+    if not text:
+        return {}
+    engine_roles = [{
+        "id": r["id"],
+        "role_name": r.get("title", ""),
+        "description": r.get("description") or r.get("jd_text") or r.get("title", ""),
+        "required_skills": r.get("req_skills") or [],
+    } for r in roles]
+    return {
+        s["id"]: {
+            "semantic": round(s["similarity_score"]),
+            "skill_match": round(s["skill_match_percentage"]),
+            "overall": round(s["overall_match_score"]),
+            "matched": s["matched_skills"],
+            "missing": s["missing_skills"],
+            # FAISS returns the nearest topic, which can be a skill the
+            # student already has (NumPy -> Python); only keep real gaps.
+            "tips": [{"skill": k["skill"], "tip": k["recommendation"]}
+                     for k in s["retrieved_knowledge"]
+                     if k["skill"] not in s["matched_skills"]],
+        }
+        for s in align_roles(text, engine_roles)
+    }
 
 
 # ── routes ────────────────────────────────────────────────────────────────────
@@ -133,11 +185,19 @@ def upload_resume():
             return jsonify({"error": "No file uploaded"}), 400
 
         file = request.files["resume"]
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(UPLOAD_FOLDER, filename)
-        file.save(filepath)
+        filename = secure_filename(file.filename) or "resume"
+        ext = os.path.splitext(file.filename or "")[1].lower()
+        if ext not in (".pdf", ".docx"):
+            return jsonify({"error": "Upload a PDF or DOCX resume."}), 400
 
-        resume_text = _extract_text(filepath, filename)
+        # A unique name so two "resume.pdf" uploads never overwrite each other;
+        # the file is deleted as soon as its text has been read.
+        filepath = os.path.join(UPLOAD_FOLDER, uuid.uuid4().hex + ext)
+        file.save(filepath)
+        try:
+            resume_text = _extract_text(filepath, ext)
+        finally:
+            os.remove(filepath)
 
         if not resume_text.strip():
             return jsonify({
@@ -182,17 +242,28 @@ def analyze():
 
     Expects: { profile: {...}, roles: [...] }
     Returns: { results: [ { id, title, score, b, why, matched, missing,
-                             proj, weak, recs, gaps, road }, ... ] }
+                             proj, weak, recs, gaps, road,
+                             ml: { semantic, skill_match, overall,
+                                   matched, missing, tips } }, ... ] }
     """
     try:
         data = request.json or {}
         profile = data.get("profile", {})
-        roles = data.get("roles", [])
+        roles = _library_roles(data.get("roles", []))
 
         if not profile or not roles:
             return jsonify({"error": "A profile and at least one role are required."}), 400
 
         results = analyze_roles_with_gemini(profile, roles)
+
+        # Second opinion from the local semantic engine (non-fatal)
+        try:
+            semantic = _semantic_scores(profile, roles)
+            for r in results:
+                if r["id"] in semantic:
+                    r["ml"] = semantic[r["id"]]
+        except Exception as ml_err:
+            print("SEMANTIC ENGINE WARNING:", ml_err)
 
         _save(analyses_col, {
             "candidate": profile.get("name"),
@@ -205,6 +276,25 @@ def analyze():
     except Exception as e:
         print("ANALYZE ERROR:", e)
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/feedback", methods=["POST"])
+def feedback():
+    """
+    One-tap "Does this feel right?" answer on the results page.
+
+    Expects: { top_role: "...", agree: true | false, roles: n }
+    """
+    data = request.json or {}
+    if not isinstance(data.get("agree"), bool):
+        return jsonify({"error": "agree must be true or false"}), 400
+    _save(feedback_col, {
+        "top_role": str(data.get("top_role", ""))[:120],
+        "agree": data["agree"],
+        "roles": data.get("roles"),
+        "at": datetime.now(timezone.utc),
+    })
+    return jsonify({"ok": True})
 
 
 @app.route("/api/ml-rank", methods=["POST"])
