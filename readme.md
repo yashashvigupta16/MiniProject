@@ -120,7 +120,7 @@ View roles **side by side**, spot repeated gaps and **download a report**.
 
 ```mermaid
 %%{init: {'theme':'base','themeVariables':{'primaryColor':'#EFEBFF','primaryTextColor':'#0A0E2A','primaryBorderColor':'#6C4BFF','lineColor':'#6C4BFF','secondaryColor':'#EAF2FF','tertiaryColor':'#F8F7FF'}}}%%
-flowchart LR
+flowchart TB
     U(["👤 Candidate"]) --> FE["🖥️ Dashboard<br/>React 18 + HTM + Tailwind"]
     FE <-->|"REST / JSON"| API["⚙️ Flask API"]
     API --> EX["📄 Text extraction<br/>PyMuPDF · PyPDF2 · DOCX"]
@@ -179,7 +179,7 @@ sequenceDiagram
 
 ```mermaid
 %%{init: {'theme':'base','themeVariables':{'primaryColor':'#EFEBFF','primaryTextColor':'#0A0E2A','primaryBorderColor':'#6C4BFF','lineColor':'#6C4BFF'}}}%%
-flowchart LR
+flowchart TB
     R["Resume text"] --> E["all-MiniLM-L6-v2<br/>384-dim vector"]
     J["Role description"] --> E
     E --> S["Cosine similarity<br/><b>60%</b>"]
