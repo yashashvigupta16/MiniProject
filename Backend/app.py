@@ -1,5 +1,7 @@
 import os
 import sys
+import threading
+import webbrowser
 import zipfile
 from xml.etree import ElementTree
 from flask import Flask, request, jsonify, send_from_directory
@@ -233,4 +235,7 @@ def ml_rank():
 
 # ── entry point ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
+    if os.environ.get("OPEN_BROWSER"):
+        # Short delay so the server is listening before the page is requested
+        threading.Timer(1.5, webbrowser.open, ["http://localhost:5000"]).start()
     app.run(debug=True, port=5000, use_reloader=False)
