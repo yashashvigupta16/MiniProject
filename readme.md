@@ -401,7 +401,7 @@ This is an academic mini-project that runs locally.
 <td width="33%" align="center" valign="top">
 
 ### 🧠
-**Somya Goyal**<br>
+**[Somya Goyal](https://github.com/heyitsomya)**<br>
 <sub>ML & NLP Lead</sub>
 
 SBERT embeddings, NLP processing, text extraction, RAG pipeline, semantic similarity and job matching
@@ -419,7 +419,7 @@ Flask REST API, MongoDB design, Gemini integration, backend logic, data processi
 <td width="33%" align="center" valign="top">
 
 ### 🎨
-**Shivangi Goel**<br>
+**[Shivangi Goel](https://github.com/shivangiigoel01)**<br>
 <sub>Frontend & UI/UX Lead</sub>
 
 React development, UI/UX design, upload interface, interactive dashboard, results display and responsive design
